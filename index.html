@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Goa expedition plan, 25 Sep – 3 Oct 2026. 8 riders, 4 scooters, validated against Konkan Railway monsoon timetable and seasonal opening dates.">
+<meta name="theme-color" content="#132A4E">
+<title>Goa Expedition — 25 Sep to 3 Oct 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+  :root{
+    --wash:#F2F1EA;
+    --wash-2:#E6E4D9;
+    --tile:#1E3F73;
+    --tile-deep:#132A4E;
+    --tile-pale:#7FA0C9;
+    --laterite:#B4532A;
+    --laterite-pale:#E0A98C;
+    --palm:#2E6B51;
+    --amber:#96690F;
+    --alarm:#9E2B2B;
+    --ink:#151C28;
+    --muted:#5B6373;
+    --rule:rgba(21,28,40,0.14);
+    --rule-strong:rgba(21,28,40,0.26);
+    --shadow:0 1px 2px rgba(19,42,78,0.08), 0 8px 24px -12px rgba(19,42,78,0.28);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}
+  }
+  body{
+    margin:0;
+    background:var(--wash);
+    color:var(--ink);
+    font-family:'Archivo',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;margin:0;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+  a{color:var(--tile);}
+  :focus-visible{outline:2.5px solid var(--laterite);outline-offset:2px;border-radius:3px;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px;}
+
+  /* ---------- HERO : azulejo band ---------- */
+  .hero{
+    background:var(--tile-deep);
+    color:#EDF1F7;
+    position:relative;
+    overflow:hidden;
+    padding:56px 0 44px;
+    border-bottom:5px solid var(--laterite);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%237FA0C9' stroke-width='1.1' opacity='0.5'%3E%3Cpath d='M30 4 L56 30 L30 56 L4 30 Z'/%3E%3Cpath d='M30 16 L44 30 L30 44 L16 30 Z'/%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Cpath d='M0 0 L12 12 M60 0 L48 12 M0 60 L12 48 M60 60 L48 48'/%3E%3C/g%3E%3C/svg%3E");
+    opacity:0.22;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;left:0;right:0;bottom:0;height:60%;
+    background:linear-gradient(to top,var(--tile-deep) 8%,rgba(19,42,78,0.55) 60%,transparent 100%);
+  }
+  .hero .wrap{position:relative;z-index:2;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--laterite-pale);margin-bottom:16px;
+  }
+  .hero h1{font-size:clamp(40px,7.5vw,68px);line-height:0.98;max-width:12ch;}
+  .hero h1 em{font-style:italic;color:var(--tile-pale);}
+  .hero .tag{font-size:16.5px;max-width:56ch;margin-top:18px;color:#C8D4E4;}
+  .route-line{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    margin-top:22px;color:#9FB6D2;letter-spacing:0.02em;
+    word-spacing:0.1em;
+  }
+  .route-line b{color:#EDF1F7;font-weight:500;}
+
+  /* ---------- STATUS COUNTS ---------- */
+  .counts{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;}
+  .count{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    padding:9px 13px;border-radius:3px;
+    background:rgba(237,241,247,0.10);
+    border:1px solid rgba(237,241,247,0.24);
+  }
+  .count b{color:#fff;font-weight:700;}
+  .count.ok{border-color:rgba(120,200,160,0.6);background:rgba(46,107,81,0.35);}
+  .count.warn{border-color:rgba(224,169,140,0.6);background:rgba(180,83,42,0.32);}
+
+  /* ---------- NAV ---------- */
+  .daynav{
+    position:sticky;top:0;z-index:400;
+    background:rgba(242,241,234,0.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--rule-strong);
+    overflow-x:auto;white-space:nowrap;
+    scrollbar-width:thin;
+  }
+  .daynav ul{display:flex;gap:2px;margin:0;padding:8px 22px;list-style:none;max-width:900px;margin:0 auto;}
+  .daynav a{
+    display:block;
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;
+    color:var(--muted);text-decoration:none;
+    padding:7px 11px;border-radius:3px;
+    border:1px solid transparent;
+  }
+  .daynav a:hover{background:var(--wash-2);color:var(--tile-deep);}
+  .daynav a.current{background:var(--tile-deep);color:#fff;}
+
+  /* ---------- SECTION HEADINGS ---------- */
+  .sec{margin-top:52px;}
+  .sec-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:0.16em;text-transform:uppercase;color:var(--laterite);
+    display:flex;align-items:center;gap:12px;margin-bottom:10px;
+  }
+  .sec-label::after{content:"";flex:1;height:1px;background:var(--rule);}
+  .sec h2{font-size:30px;line-height:1.12;margin-bottom:8px;}
+  .sec > p.lede{color:var(--muted);font-size:15px;max-width:64ch;margin:0 0 22px;}
+
+  /* ---------- FINDINGS ---------- */
+  .find{
+    border:1px solid var(--rule);
+    border-left:4px solid var(--muted);
+    background:#fff;
+    border-radius:4px;
+    padding:15px 17px;
+    margin-bottom:12px;
+    box-shadow:var(--shadow);
+  }
+  .find.fix{border-left-color:var(--alarm);}
+  .find.check{border-left-color:var(--amber);}
+  .find.risk{border-left-color:var(--laterite);}
+  .find.ok{border-left-color:var(--palm);}
+  .chip{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+    letter-spacing:0.12em;text-transform:uppercase;
+    padding:3px 7px;border-radius:2px;color:#fff;margin-bottom:8px;
+  }
+  .fix .chip{background:var(--alarm);}
+  .check .chip{background:var(--amber);}
+  .risk .chip{background:var(--laterite);}
+  .ok .chip{background:var(--palm);}
+  .find h4{margin:0 0 5px;font-family:'Archivo',sans-serif;font-size:15.5px;font-weight:600;}
+  .find p{margin:0;font-size:14.5px;color:#333A46;}
+  .find p + p{margin-top:7px;}
+  .find .was{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;
+    color:var(--muted);display:block;margin-top:8px;
+    padding-top:8px;border-top:1px dashed var(--rule);
+  }
+  .find .was s{color:var(--alarm);text-decoration-thickness:1px;}
+  .find .was b{color:var(--palm);font-weight:700;}
+
+  /* ---------- TIMELINE ---------- */
+  .timeline{position:relative;margin-top:8px;}
+  .timeline::before{
+    content:"";position:absolute;left:23px;top:14px;bottom:30px;width:2px;
+    background:linear-gradient(to bottom,var(--tile-pale),var(--tile) 12%,var(--tile) 88%,var(--tile-pale));
+  }
+  .day{position:relative;padding-left:66px;margin-bottom:40px;scroll-margin-top:66px;}
+  .day-num{
+    position:absolute;left:0;top:2px;
+    width:48px;height:48px;border-radius:50%;
+    background:var(--wash);border:2px solid var(--tile);
+    color:var(--tile-deep);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;
+    box-shadow:0 0 0 5px var(--wash);
+    line-height:1;
+  }
+  .day-num small{font-size:8px;font-weight:400;letter-spacing:0.08em;color:var(--muted);margin-top:2px;}
+  .day.travel .day-num{background:var(--tile-deep);border-color:var(--tile-deep);color:#fff;}
+  .day.travel .day-num small{color:var(--tile-pale);}
+  .day-date{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;
+    text-transform:uppercase;letter-spacing:0.11em;color:var(--laterite);
+  }
+  .day h3{font-size:26px;margin-top:1px;line-height:1.15;}
+  .day-sub{font-size:14px;color:var(--muted);margin-top:5px;max-width:60ch;}
+
+  .stops{margin-top:16px;border-top:1px solid var(--rule);}
+  .stop{
+    display:grid;grid-template-columns:96px 1fr;gap:16px;
+    padding:12px 0;border-bottom:1px solid var(--rule);
+  }
+  .stop-time{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;
+    color:var(--tile);font-weight:500;padding-top:2px;
+  }
+  .stop-name{font-weight:600;font-size:15.5px;}
+  .stop-note{font-size:14px;color:#3E4553;margin-top:3px;}
+  .flag{
+    display:inline-block;font-family:'JetBrains Mono',monospace;
+    font-size:9.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+    padding:2px 6px;border-radius:2px;margin-left:7px;vertical-align:1.5px;
+    border:1px solid currentColor;
+  }
+  .flag.f-check{color:var(--amber);}
+  .flag.f-risk{color:var(--laterite);}
+  .flag.f-fix{color:var(--alarm);}
+  .flag.f-new{color:var(--palm);}
+  .stop-note .why{display:block;margin-top:5px;font-size:13px;color:var(--muted);border-left:2px solid var(--rule-strong);padding-left:9px;}
+
+  /* ---------- MAPS ---------- */
+  .day-map{
+    margin-top:16px;height:290px;border-radius:5px;
+    border:1px solid var(--rule-strong);overflow:hidden;background:var(--wash-2);
+  }
+  .leaflet-marker-icon.stop-pin{
+    background:var(--laterite);color:#fff;border-radius:50%;
+    width:26px !important;height:26px !important;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
+    border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,0.4);
+  }
+  .leaflet-marker-icon.stop-pin.home{background:var(--tile-deep);}
+  .route-stats{
+    margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--tile-deep);display:flex;align-items:flex-start;gap:7px;line-height:1.5;
+  }
+  .route-stats::before{content:"▸";color:var(--laterite);font-weight:700;}
+  .route-stats.pending{color:var(--muted);}
+  .route-stats.failed{color:var(--amber);}
+
+  .home-badge{
+    margin-top:14px;display:flex;align-items:flex-start;gap:10px;
+    background:var(--tile-deep);color:#DCE5F0;
+    padding:11px 15px;border-radius:4px;font-size:13.5px;
+  }
+  .home-badge .moon{flex-shrink:0;opacity:0.8;}
+  .home-badge b{font-family:'JetBrains Mono',monospace;color:#fff;font-weight:700;}
+
+  /* ---------- PANELS ---------- */
+  .panel{background:#fff;border:1px solid var(--rule);border-radius:5px;padding:20px 22px;box-shadow:var(--shadow);}
+  .panel + .panel{margin-top:14px;}
+  .panel h4{margin:0 0 10px;font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;}
+  .panel ul{margin:0;padding-left:19px;font-size:14.5px;}
+  .panel li{margin-bottom:7px;}
+  .panel li:last-child{margin-bottom:0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .swap{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;padding:11px 0;border-bottom:1px dashed var(--rule);font-size:14.5px;}
+  .swap:last-child{border-bottom:none;}
+  .swap .arrow{font-family:'JetBrains Mono',monospace;color:var(--laterite);font-weight:700;}
+  .swap .to{font-weight:600;}
+
+  /* ---------- CHECKLIST ---------- */
+  .checklist-section{background:var(--tile-deep);color:#E4EAF3;padding:52px 0 60px;margin-top:56px;}
+  .checklist-section .sec-label{color:var(--laterite-pale);}
+  .checklist-section .sec-label::after{background:rgba(228,234,243,0.2);}
+  .checklist-section h2{color:#fff;}
+  .checklist-section p.lede{color:rgba(228,234,243,0.7);}
+  .progress-bar{height:5px;background:rgba(228,234,243,0.16);border-radius:3px;overflow:hidden;margin:6px 0 30px;}
+  .progress-fill{height:100%;background:var(--laterite-pale);width:0%;transition:width 0.3s ease;}
+  .progress-text{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--laterite-pale);letter-spacing:0.08em;}
+  .cl-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;}
+  .cl-group h4{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.13em;
+    text-transform:uppercase;color:var(--laterite-pale);margin:0 0 8px;
+    padding-bottom:6px;border-bottom:1px solid rgba(228,234,243,0.2);
+  }
+  .cl-group ul{list-style:none;margin:0;padding:0;}
+  .cl-group li{border-bottom:1px solid rgba(228,234,243,0.11);}
+  .cl-group button{
+    all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:11px;
+    align-items:flex-start;width:100%;padding:9px 2px;font-size:14.5px;
+    font-family:'Archivo',sans-serif;color:#E4EAF3;line-height:1.45;
+  }
+  .cl-group button:hover .box{border-color:var(--laterite-pale);}
+  .cl-group .box{
+    flex-shrink:0;width:16px;height:16px;margin-top:3px;border-radius:3px;
+    border:1.5px solid rgba(228,234,243,0.5);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;color:transparent;
+  }
+  .cl-group button[aria-pressed="true"] .box{background:var(--laterite);border-color:var(--laterite);color:#fff;}
+  .cl-group button[aria-pressed="true"] .txt{opacity:0.45;text-decoration:line-through;}
+  .cl-group .pri{
+    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
+    letter-spacing:0.1em;color:var(--laterite-pale);border:1px solid currentColor;
+    padding:1px 5px;border-radius:2px;margin-left:6px;white-space:nowrap;vertical-align:2px;
+  }
+
+  /* ---------- CONTACTS ---------- */
+  .contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
+  .card{
+    background:#fff;border:1px solid var(--rule);border-radius:5px;padding:14px 16px;
+  }
+  .card .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+  .card .v{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:var(--tile-deep);margin-top:3px;}
+  .card .d{font-size:13px;color:var(--muted);margin-top:3px;}
+  .blank{color:var(--laterite);border-bottom:1.5px dotted var(--laterite);padding:0 22px;}
+
+  footer{
+    text-align:center;padding:30px 22px 40px;font-size:11.5px;color:var(--muted);
+    font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;
+  }
+
+  @media(max-width:680px){
+    .grid2,.cl-grid{grid-template-columns:1fr;}
+    .stop{grid-template-columns:70px 1fr;gap:11px;}
+    .day{padding-left:52px;}
+    .day-num{width:38px;height:38px;font-size:13px;}
+    .day-num small{display:none;}
+    .timeline::before{left:18px;}
+    .swap{grid-template-columns:1fr;gap:3px;}
+    .swap .arrow{display:none;}
+    .hero{padding:40px 0 34px;}
+  }
+  @media print{
+    .daynav,.day-map,.hero::before{display:none;}
+    body{background:#fff;font-size:11pt;}
+    .panel,.find,.card{box-shadow:none;break-inside:avoid;}
+    .day{break-inside:avoid;}
+    .checklist-section{background:#fff;color:#000;}
+    .checklist-section h2,.cl-group button{color:#000;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">North Goa · 8 riders · 4 scooters · monsoon tail-end</div>
+    <h1>The Goa <em>Expedition</em></h1>
+    <p class="tag">25 September – 3 October 2026. Two overnight trains down, eight days of North Goa, one flight home. Sober, sunset-timed, and back at basecamp before the roads get risky.</p>
+    <div class="route-line">
+      <b>HWH</b> → 12262 → <b>CSMT</b> → 12133 → <b>KRMI</b> → Baga → Arpora → <b>GOX</b> → <b>CCU</b>
+    </div>
+    <div class="counts">
+      <span class="count ok"><b>4</b> locked</span>
+      <span class="count warn"><b>7</b> need booking or a call</span>
+      <span class="count"><b>5</b> season-dependent</span>
+      <span class="count"><b>6</b> errors corrected</span>
+    </div>
+  </div>
+</header>
+
+<nav class="daynav" aria-label="Jump to day">
+  <ul>
+    <li><a href="#audit">Corrections</a></li>
+    <li><a href="#d1">25–26 Sep · Rail</a></li>
+    <li><a href="#d2">27 Sep · Baga</a></li>
+    <li><a href="#d3">28 Sep · Panjim</a></li>
+    <li><a href="#d4">29 Sep · Aguada</a></li>
+    <li><a href="#d5">30 Sep · Vagator</a></li>
+    <li><a href="#d6">1 Oct · Arpora</a></li>
+    <li><a href="#d7">2 Oct · Far North</a></li>
+    <li><a href="#d8">3 Oct · Home</a></li>
+    <li><a href="#rain">Rain plan</a></li>
+    <li><a href="#riding">Riding rules</a></li>
+    <li><a href="#checklist">Checklist</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ AUDIT ============ -->
+<section class="sec" id="audit">
+  <div class="sec-label">What changed</div>
+  <h2>Corrections and open questions</h2>
+  <p class="lede">Everything below was checked against published timetables, seasonal opening dates, and the actual coordinates in this file. Six things were wrong. Five more depend on the season and need a phone call before you commit to them.</p>
+
+  <div class="find risk">
+    <span class="chip">Biggest risk</span>
+    <h4>The entire trip sits inside the Konkan Railway monsoon timetable</h4>
+    <p>The monsoon timetable runs 15 June – 20 October 2026, with speed restrictions across the Konkan route. Trains on this corridor run roughly two hours slower than the fair-weather schedule. Your 12133 leg on 26–27 September is squarely inside that window.</p>
+    <p>This also means late-September Goa is still functionally monsoon season, which drives most of the other flags on this page: the flea market, water sports, swimming, shacks, and midweek club nights.</p>
+  </div>
+
+  <div class="find check">
+    <span class="chip">Verify</span>
+    <h4>Karmali arrival: the 08:08 needs a source</h4>
+    <p>The published fair-weather timetable has 12133 reaching Karmali at 06:28. Your plan says 08:08 — which is about right for a monsoon-timetable arrival, so it is probably the number you were given, not a mistake. But it is not the number on most timetable sites, so confirm it against the Central Railway monsoon timetable or NTES before you build the morning around it.</p>
+    <span class="was">Fair-weather TT <s>06:28</s> · your plan <b>08:08</b> · gap ≈ 1h 40m, consistent with monsoon restrictions</span>
+  </div>
+
+  <div class="find fix">
+    <span class="chip">Fixed</span>
+    <h4>Baga to Arpora is not a 30-minute ride</h4>
+    <p>Plot 77 and The Hosteller Arpora are 0.7 km apart in a straight line — call it 1.5 km and five minutes by road. The original note said ~30 minutes, which would have had you leaving three hours earlier than necessary on moving day.</p>
+    <span class="was">Day 6 transfer <s>~30 min</s> → <b>~5 min</b></span>
+  </div>
+
+  <div class="find fix">
+    <span class="chip">Fixed</span>
+    <h4>Day 7 ran the northern beaches backwards</h4>
+    <p>Coming from Artjuna in Anjuna, Morjim is 4.3 km out and Ashwem is 7.7 km. The original route went to Ashwem first and doubled back. Reversed, so you ride north once and turn around once.</p>
+    <span class="was">Artjuna → <s>Ashwem → Morjim</s> → <b>Morjim → Ashwem</b></span>
+  </div>
+
+  <div class="find fix">
+    <span class="chip">Fixed</span>
+    <h4>The Ribandar ferry does not go to Divar</h4>
+    <p>Ribandar's jetty serves Chorão island. Divar is reached from the Old Goa jetty by the Viceroy's Arch, or from Naroa. Since you are already at Bom Jesus and Sé Cathedral, the Old Goa jetty is a two-minute ride away — so Day 3 now runs Fontainhas → Ribandar → Old Goa → ferry, instead of criss-crossing the river.</p>
+    <span class="was">Ferry point <s>Ribandar jetty</s> → <b>Old Goa jetty (Viceroy's Arch)</b>. Confirm the crossing is running; monsoon ferries get suspended in rough water.</span>
+  </div>
+
+  <div class="find risk">
+    <span class="chip">Season</span>
+    <h4>Anjuna Flea Market is very unlikely to be open on 30 September</h4>
+    <p>30 September 2026 is indeed a Wednesday — that part of the plan was right. But the market is a dry-season operation: stalls come down for the monsoon around June and go back up in October. Sources put the reopening at "October", which puts your date on the wrong side of the line by days.</p>
+    <p>Day 5 now leads with Mapusa Market instead, which runs year-round, and keeps Anjuna as the upgrade if a phone call says the stalls are up.</p>
+    <span class="was">Anjuna Wednesday market: <s>confirmed by date</s> → <b>call ahead, plan on Mapusa</b></span>
+  </div>
+
+  <div class="find fix">
+    <span class="chip">Fixed</span>
+    <h4>Turtles are not nesting in September</h4>
+    <p>Morjim's olive ridley nesting season runs roughly November to March. In early October you get the beach and the estuary, not the turtles. The note has been rewritten so nobody spends an afternoon looking for them.</p>
+  </div>
+
+  <div class="find fix">
+    <span class="chip">Fixed</span>
+    <h4>Departure day had no transport in it</h4>
+    <p>The plan returned the scooters at 09:00 on Saturday and then, forty minutes of itinerary later, arrived at an airport 35–40 km away. Once four scooters go back you have eight people, eight bags, and no vehicle. Saturday is now its own day with a booked eight-seater in it.</p>
+  </div>
+
+  <div class="find check">
+    <span class="chip">Verify</span>
+    <h4>Midweek club nights in early October</h4>
+    <p>LPK on a Tuesday and Hammerzz on a Thursday are the two soft spots. Season proper hasn't started; monsoon and shoulder-season nightlife in North Goa is event-led and heavily weekend-weighted, and midweek can be dead or shut. Check each venue's Instagram the week before — that is where these places actually announce whether they are opening.</p>
+  </div>
+
+  <div class="find ok">
+    <span class="chip">Checked, correct</span>
+    <h4>The things that were already right</h4>
+    <p>Every weekday label matches 2026: 25 Sep is a Friday, 30 Sep is a Wednesday, 3 Oct is a Saturday. The 12262 Duronto runs Mon/Tue/Wed/Fri, so a Friday departure works, and the 05:35 → 08:15 timing over 26h 40m and 1,968 km is the published schedule. Karmali is the right station to get off at, not Madgaon. GOX rather than GOI is the right assumption for the return. Four licensed riders for four scooters is exactly enough with no rotation.</p>
+  </div>
+</section>
+
+<!-- ============ TIMELINE ============ -->
+<section class="sec">
+  <div class="sec-label">Day by day</div>
+  <h2>The plan</h2>
+  <p class="lede">Times in IST. Ride estimates come from a live routing service where the map loads; where it can't, the map falls back to straight-line distance and says so.</p>
+
+  <div class="timeline">
+
+  <!-- DAY 1 -->
+  <article class="day travel" id="d1">
+    <div class="day-num">1<small>RAIL</small></div>
+    <div class="day-date">Fri 25 – Sat 26 Sep</div>
+    <h3>The overland approach</h3>
+    <p class="day-sub">Two nights of train with a real bed in the middle. The Mumbai layover is not sightseeing time — it is the shock absorber for the Duronto.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">05:35 Fri</div><div>
+        <div class="stop-name">Depart Howrah — 12262 Duronto <span class="flag f-check">confirm</span></div>
+        <div class="stop-note">26h 40m, 1,968 km, e-catering already booked. Runs Mon/Tue/Wed/Fri, so Friday is a valid day.
+        <span class="why">Two things to check on NTES the night before: some sources list 05:45 rather than 05:35, and this train is rescheduled at origin more often than most. Chart prepares four hours before departure.</span></div></div></div>
+      <div class="stop"><div class="stop-time">~08:15 Sat</div><div>
+        <div class="stop-name">Arrive Mumbai CSMT</div>
+        <div class="stop-note">Treat this as the optimistic case. The run regularly loses hours around Bhusaval and Kalyan.</div></div></div>
+      <div class="stop"><div class="stop-time">Daytime</div><div>
+        <div class="stop-name">Layover at a friend's place, Mumbai</div>
+        <div class="stop-note">Pure buffer. Absorbs Duronto delay and gets everyone showered and horizontal before the second overnight.
+        <span class="why">Decide now what happens if the Duronto is more than six hours late and you'd miss the 21:54. The fallback is a same-evening flight BOM→GOX, which is worth pricing in advance rather than at 19:00 on a Saturday.</span></div></div></div>
+      <div class="stop"><div class="stop-time">21:54 Sat</div><div>
+        <div class="stop-name">Board 12133 CSMT–Mangaluru Express <span class="flag f-risk">monsoon TT</span></div>
+        <div class="stop-note">Overnight down the Konkan. Disembark at Karmali, not Madgaon.
+        <span class="why">This train is on the monsoon timetable until 20 October. Departure and arrival times both shift — re-check the CSMT departure, not just the Karmali arrival.</span></div></div></div>
+    </div>
+    <div class="home-badge"><span class="moon">◗</span><span>No map for this leg — it's 2,500 km of railway. The first ride map starts at Karmali.</span></div>
+  </article>
+
+  <!-- DAY 2 -->
+  <article class="day" id="d2">
+    <div class="day-num">2<small>BAGA</small></div>
+    <div class="day-date">Sun 27 Sep</div>
+    <h3>Touchdown in Baga</h3>
+    <p class="day-sub">Arrival, scooters, and one easy night. Do not schedule anything you'd be upset to lose — the train sets the clock.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">~08:08</div><div>
+        <div class="stop-name">Arrive Karmali (KRMI) <span class="flag f-check">confirm time</span></div>
+        <div class="stop-note">Closer to Baga than Madgaon by a long way. Pre-book two SUVs or a Tempo Traveller — ~32 km, 45–60 min.
+        <span class="why">Book the pickup for the actual arrival, then track the train from Ratnagiri onward and message the driver. Karmali is a small station and taxis there are a seller's market if you turn up unbooked.</span></div></div></div>
+      <div class="stop"><div class="stop-time">~09:30</div><div>
+        <div class="stop-name">Check in, Plot 77 by HNH, Baga <span class="flag f-check">early check-in</span></div>
+        <div class="stop-note">Standard check-in is usually early afternoon. Get 09:30 agreed in writing, or at minimum secure luggage storage and a bathroom.</div></div></div>
+      <div class="stop"><div class="stop-time">~11:00</div><div>
+        <div class="stop-name">Collect 4 scooters <span class="flag f-new">added detail</span></div>
+        <div class="stop-note">Video every scooter before any money changes hands — all four sides, fuel gauge, existing scratches, tyre tread, both mirrors, working horn and indicators.
+        <span class="why">Count eight helmets, not four. Goa enforces pillion helmets. Photograph the RC and insurance for each bike, and do not surrender original licences or passports — offer a photocopy and a cash deposit instead.</span></div></div></div>
+      <div class="stop"><div class="stop-time">13:00–17:00</div><div>
+        <div class="stop-name">Baga Beach <span class="flag f-risk">season</span></div>
+        <div class="stop-note">Shack season officially opens 1 September, but in practice North Goa shacks fill in through October, and water sports operators restart when the sea is declared safe.
+        <span class="why">Expect red flags and a swimming ban. Plan this as a walk-and-eat afternoon; if parasailing and jet skis are running, treat that as a bonus.</span></div></div></div>
+      <div class="stop"><div class="stop-time">20:00</div><div>
+        <div class="stop-name">Club Tito's, Tito's Lane</div>
+        <div class="stop-note">Bollywood and EDM, VIP table, mocktails. Sunday of a shoulder-season week — call to confirm they're running and whether the table minimum applies.</div></div></div>
+    </div>
+    <div class="day-map" id="map-d2" role="img" aria-label="Route map for day 2"></div>
+    <div class="route-stats pending" id="stats-d2">Loading route…</div>
+    <div class="home-badge"><span class="moon">◗</span><span>Easiest night of the trip. Tito's is 1.7 km from Plot 77 — <b>home by ~23:45</b> without hurrying.</span></div>
+  </article>
+
+  <!-- DAY 3 -->
+  <article class="day" id="d3">
+    <div class="day-num">3<small>PANJIM</small></div>
+    <div class="day-date">Mon 28 Sep</div>
+    <h3>Latin Quarter and the river</h3>
+    <p class="day-sub">The longest riding day and the best one for rain — almost everything here works wet. Route reordered to stop the river backtracking.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">07:45</div><div>
+        <div class="stop-name">Depart Baga for Panjim</div>
+        <div class="stop-note">Sunrise is 06:24. An early start buys you soft light and empty lanes in Fontainhas.</div></div></div>
+      <div class="stop"><div class="stop-time">08:30</div><div>
+        <div class="stop-name">Fontainhas walk</div>
+        <div class="stop-note">Tobacco Square, Chapel of St. Sebastian, then Confeitaria 31 De Janeiro for coffee and a Swiss roll. Park once and walk — the lanes are one-way and tight.</div></div></div>
+      <div class="stop"><div class="stop-time">11:00</div><div>
+        <div class="stop-name">Fabs Bebinca, Ribandar <span class="flag f-fix">reordered</span></div>
+        <div class="stop-note">Fatima's home-baked bebinca. Not signposted — ask near the Ribandar church. Now before Old Goa rather than after, since Ribandar sits between Panjim and Old Goa.</div></div></div>
+      <div class="stop"><div class="stop-time">12:00</div><div>
+        <div class="stop-name">Basilica of Bom Jesus + Sé Cathedral</div>
+        <div class="stop-note">UNESCO-listed, both free. Shoulders and knees covered.
+        <span class="why">The Basilica closes to visitors during Mass. Check the day's Mass times on arrival and see Sé first if you've landed in the middle of one.</span></div></div></div>
+      <div class="stop"><div class="stop-time">14:30–17:30</div><div>
+        <div class="stop-name">Divar Island via the Old Goa jetty <span class="flag f-fix">corrected</span></div>
+        <div class="stop-note">Free flat-bottom ferry for two-wheelers from the Old Goa terminal by the Viceroy's Arch — free for bikes, roughly 06:00 to midnight. Quiet interior roads, no traffic, good riding.
+        <span class="why">Ferries can be suspended in heavy rain or rough water. Ask at the jetty what time the last crossing back runs, and don't be on the island without knowing that number.</span></div></div></div>
+      <div class="stop"><div class="stop-time">19:30</div><div>
+        <div class="stop-name">Vinayak Family Restaurant, Assagao</div>
+        <div class="stop-note">Goan thali and sol kadhi. Open till 23:00. Roughly on the way home from the river.</div></div></div>
+    </div>
+    <div class="day-map" id="map-d3" role="img" aria-label="Route map for day 3"></div>
+    <div class="route-stats pending" id="stats-d3">Loading route…</div>
+    <div class="home-badge"><span class="moon">◗</span><span>No club tonight, by design. <b>Home by ~22:00</b> after the longest day on the bikes.</span></div>
+  </article>
+
+  <!-- DAY 4 -->
+  <article class="day" id="d4">
+    <div class="day-num">4<small>FORTS</small></div>
+    <div class="day-date">Tue 29 Sep</div>
+    <h3>Forts and the waterfront</h3>
+    <p class="day-sub">Short riding day. The only real question is whether LPK is open on a Tuesday this early in the season.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">09:30</div><div>
+        <div class="stop-name">Fort Aguada, Sinquerim</div>
+        <div class="stop-note">Ramparts and cistern, free to enter, best light around 10:00. The lighthouse keeps its own restricted hours and the old jail section is closed to the public.
+        <span class="why">You ride through Candolim to reach Aguada and come back through it afterwards. That's deliberate — morning light on the ramparts is worth the doubling back.</span></div></div></div>
+      <div class="stop"><div class="stop-time">13:00–16:00</div><div>
+        <div class="stop-name">Candolim Beach</div>
+        <div class="stop-note">Quieter than Baga and better for a long lunch. Same red-flag caveat as Day 2.</div></div></div>
+      <div class="stop"><div class="stop-time">20:00</div><div>
+        <div class="stop-name">LPK Waterfront, Nerul <span class="flag f-risk">midweek</span></div>
+        <div class="stop-note">Mud-and-stone architecture, riverside deck, deep house. The standout venue of the trip when it's running.
+        <span class="why">A Tuesday in late September is the least likely night of your whole itinerary to be open. Call, and check Instagram the same week. If it's shut, Tuesday becomes a Panjim casino-boat night instead — see the rain plan.</span></div></div></div>
+    </div>
+    <div class="day-map" id="map-d4" role="img" aria-label="Route map for day 4"></div>
+    <div class="route-stats pending" id="stats-d4">Loading route…</div>
+    <div class="home-badge"><span class="moon">◗</span><span>Longest night ride of the trip — Nerul back to Baga is 25–30 min on unlit road. Leave by 23:15 so the convoy isn't out there late. <b>Home by ~00:00</b>.</span></div>
+  </article>
+
+  <!-- DAY 5 -->
+  <article class="day" id="d5">
+    <div class="day-num">5<small>SUNSET</small></div>
+    <div class="day-date">Wed 30 Sep</div>
+    <h3>Market, fort, sunset</h3>
+    <p class="day-sub">The day that needed the most rework. The flea market anchor is probably not there yet, so the day now leads with a market that is open year-round.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">09:30–12:00</div><div>
+        <div class="stop-name">Mapusa Market <span class="flag f-fix">replaces Anjuna</span></div>
+        <div class="stop-note">Open year-round, genuinely local, and 15 minutes from Baga. Spices, cashews, produce, chorizo, bebinca.
+        <span class="why">Call an Anjuna vendor or the shack owners first. If the flea market stalls are up — reopening is usually early October — go there instead and keep Mapusa in your pocket. Anjuna runs Wednesdays only, so this is your single shot at it.</span></div></div></div>
+      <div class="stop"><div class="stop-time">13:00–15:30</div><div>
+        <div class="stop-name">Chapora Fort</div>
+        <div class="stop-note">Free, unstaffed ruin on a laterite headland. Views over the Chapora river mouth toward Morjim.
+        <span class="why">The path up is bare laterite and it is genuinely slippery after rain. Proper shoes, not flip-flops.</span></div></div></div>
+      <div class="stop"><div class="stop-time">17:00</div><div>
+        <div class="stop-name">Thalassa, Vagator <span class="flag f-check">reserve</span></div>
+        <div class="stop-note">Clifftop Greek, the sunset table of North Goa. Sunset on 30 September is <span class="mono">18:24</span>, with usable light until about <span class="mono">18:46</span> — so the photo window is roughly 17:50–18:25.
+        <span class="why">Thalassa has run more than one location. When you call +91 98500 33537, confirm which site you're booked at, that they're open in September, and get the reservation by message so you have it in writing.</span></div></div></div>
+    </div>
+    <div class="day-map" id="map-d5" role="img" aria-label="Route map for day 5"></div>
+    <div class="route-stats pending" id="stats-d5">Loading route…</div>
+    <div class="home-badge"><span class="moon">◗</span><span>Dinner-and-sunset, not a club night. <b>Home by ~22:00</b> — you're moving house tomorrow.</span></div>
+  </article>
+
+  <!-- DAY 6 -->
+  <article class="day" id="d6">
+    <div class="day-num">6<small>MOVE</small></div>
+    <div class="day-date">Thu 1 Oct</div>
+    <h3>Basecamp shift</h3>
+    <p class="day-sub">The move is trivial — 1.5 km. The luggage is not: eight people's bags do not fit on four scooters.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">09:30</div><div>
+        <div class="stop-name">Check out of Plot 77 <span class="flag f-fix">timing corrected</span></div>
+        <div class="stop-note">Sweep every room and get the villa deposit settled before anyone leaves.</div></div></div>
+      <div class="stop"><div class="stop-time">10:00</div><div>
+        <div class="stop-name">Bags to Arpora by taxi, riders by scooter <span class="flag f-new">added</span></div>
+        <div class="stop-note">Plot 77 to The Hosteller Arpora is about 1.5 km — five minutes. Book one taxi or small tempo for the luggage and let the bikes run empty.
+        <span class="why">Eight riders with eight bags on four scooters is unbalanced, illegal to load, and the single most avoidable crash risk on this trip. One short taxi fare removes it.</span></div></div></div>
+      <div class="stop"><div class="stop-time">10:30</div><div>
+        <div class="stop-name">Drop bags, Hosteller Goa Arpora <span class="flag f-check">check-in time</span></div>
+        <div class="stop-note">Hostel check-in is typically early afternoon; luggage storage is normally available from the morning. Confirm both when you book.</div></div></div>
+      <div class="stop"><div class="stop-time">13:00</div><div>
+        <div class="stop-name">Baba Au Rhum, Anjuna</div>
+        <div class="stop-note">Shakshuka, Nutella croissants, Vietnamese iced coffee. Under a kilometre from the new base. Closed one day a week — check which.</div></div></div>
+      <div class="stop"><div class="stop-time">15:00–18:30</div><div>
+        <div class="stop-name">Vagator and Ozran, or a hostel afternoon <span class="flag f-new">gap filled</span></div>
+        <div class="stop-note">The original plan had a seven-hour hole between lunch and the club. Little Vagator and Ozran are ten minutes away and are the best rocky-coast sunset in reach of Arpora.
+        <span class="why">This is also the natural slot to do nothing. Day 6 of eight is where groups start fraying; a free afternoon at the hostel is a legitimate use of it.</span></div></div></div>
+      <div class="stop"><div class="stop-time">21:00</div><div>
+        <div class="stop-name">Hammerzz, Baga Rd <span class="flag f-risk">midweek</span></div>
+        <div class="stop-note">1.5 km from Arpora, the closest club to the new base. Separate hookah lounge upstairs, easy to skip.
+        <span class="why">Thursday, first week of October. Same warning as LPK — verify it's running before you build the night around it.</span></div></div></div>
+    </div>
+    <div class="day-map" id="map-d6" role="img" aria-label="Route map for day 6"></div>
+    <div class="route-stats pending" id="stats-d6">Loading route…</div>
+    <div class="home-badge"><span class="moon">◗</span><span>Shortest ride home of the trip — under 2 km. <b>Home by ~00:15</b>.</span></div>
+  </article>
+
+  <!-- DAY 7 -->
+  <article class="day" id="d7">
+    <div class="day-num">7<small>NORTH</small></div>
+    <div class="day-date">Fri 2 Oct</div>
+    <h3>The far north</h3>
+    <p class="day-sub">Your longest ride and your best club night, in that order. Beach order reversed so you head north once.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">09:30</div><div>
+        <div class="stop-name">Artjuna Cafe, Anjuna</div>
+        <div class="stop-note">Garden seating, falafel, Middle Eastern menu. Expect a 20–25 minute wait; it's worth it but it moves the whole morning if you arrive at eleven.</div></div></div>
+      <div class="stop"><div class="stop-time">12:00–14:00</div><div>
+        <div class="stop-name">Morjim Beach <span class="flag f-fix">reordered</span></div>
+        <div class="stop-note">Wide estuary sand at the Chapora river mouth. Nearer stop, so it comes first.
+        <span class="why">Getting here means crossing the Chapora via the Siolim bridge — add 20–25 minutes over what the straight-line distance suggests. Olive ridley nesting is November to March, so this is a beach-and-birds stop, not a turtle stop.</span></div></div></div>
+      <div class="stop"><div class="stop-time">14:30–17:30</div><div>
+        <div class="stop-name">Ashwem Beach</div>
+        <div class="stop-note">Quieter white sand and the northernmost point of the trip. Turn around from here.</div></div></div>
+      <div class="stop"><div class="stop-time">20:00</div><div>
+        <div class="stop-name">SinQ Nightclub, Candolim</div>
+        <div class="stop-note">Poolside cabanas, glass-enclosed floor. A Friday, which is the best night you'll get this early in the season.
+        <span class="why">Candolim back to Arpora is about 12 km, 25–30 minutes. Longest ride home of the week, at the end of your longest riding day — so leave earlier than feels necessary.</span></div></div></div>
+    </div>
+    <div class="day-map" id="map-d7" role="img" aria-label="Route map for day 7"></div>
+    <div class="route-stats pending" id="stats-d7">Loading route…</div>
+    <div class="home-badge"><span class="moon">◗</span><span>Last night out. <b>Home by ~00:00</b> — you have a 09:00 checkout and four scooters to hand back.</span></div>
+  </article>
+
+  <!-- DAY 8 -->
+  <article class="day travel" id="d8">
+    <div class="day-num">8<small>HOME</small></div>
+    <div class="day-date">Sat 3 Oct</div>
+    <h3>Handover and departure</h3>
+    <p class="day-sub">Split out into its own day, because the moment the scooters go back you have no transport and a 40 km drive ahead of you.</p>
+    <div class="stops">
+      <div class="stop"><div class="stop-time">09:00</div><div>
+        <div class="stop-name">Check out, return all 4 scooters</div>
+        <div class="stop-note">Play back the Day 2 videos in front of the vendor before you discuss the deposit. Refuel to the level you took them at. Get deposits back in cash on the spot.</div></div></div>
+      <div class="stop"><div class="stop-time">10:45</div><div>
+        <div class="stop-name">Depart Arpora for GOX by pre-booked vehicle <span class="flag f-new">added</span></div>
+        <div class="stop-note">One eight-seater, booked Friday night, confirmed Saturday morning. Roughly 35–40 km to Mopa, 60–75 minutes.
+        <span class="why">Leaving at 10:45 puts you at the terminal around 12:00, about 100 minutes before departure. That absorbs a puncture or a wrong turn and still clears a domestic check-in.</span></div></div></div>
+      <div class="stop"><div class="stop-time">13:40</div><div>
+        <div class="stop-name">Depart GOX <span class="flag f-check">re-confirm</span></div>
+        <div class="stop-note">Booked as 6E 712 to Hyderabad, then 6E 944 into Kolkata at 23:25.
+        <span class="why">Flight numbers and times for October 2026 will move. Re-check the PNR at 30 days and again at 48 hours. Confirm it's ticketed as one booking through to CCU — if it's two separate tickets you must collect and re-check bags in Hyderabad, and a delay on the first leg is your problem, not the airline's.</span></div></div></div>
+      <div class="stop"><div class="stop-time">23:25</div><div>
+        <div class="stop-name">Land Kolkata (CCU)</div>
+        <div class="stop-note">Arrange onward transport from CCU in advance. Eight people and eight bags at 23:25 is not a hail-a-cab situation.</div></div></div>
+    </div>
+    <div class="day-map" id="map-d8" role="img" aria-label="Airport transfer map"></div>
+    <div class="route-stats pending" id="stats-d8">Loading route…</div>
+  </article>
+
+  </div>
+</section>
+
+<!-- ============ RAIN PLAN ============ -->
+<section class="sec" id="rain">
+  <div class="sec-label">Contingency</div>
+  <h2>If it rains</h2>
+  <p class="lede">Late September is the tail of the southwest monsoon. Assume at least two wet days and pre-agree the swaps now, so nobody is negotiating in a downpour with helmets on.</p>
+  <div class="panel">
+    <div class="swap"><div>Baga Beach afternoon</div><div class="arrow">→</div><div class="to">Panjim: Goa State Museum, then the Fontainhas lanes on foot</div></div>
+    <div class="swap"><div>Candolim Beach</div><div class="arrow">→</div><div class="to">Aguada ramparts in the rain, then a long lunch in Sinquerim</div></div>
+    <div class="swap"><div>Chapora Fort climb</div><div class="arrow">→</div><div class="to">Skip it. The laterite path is the one genuinely dangerous surface on this itinerary</div></div>
+    <div class="swap"><div>Divar Island ferry loop</div><div class="arrow">→</div><div class="to">Old Goa churches at length: Bom Jesus, Sé, St. Cajetan, the Augustinian ruins</div></div>
+    <div class="swap"><div>Morjim and Ashwem</div><div class="arrow">→</div><div class="to">Assagao and Siolim cafés — short hops, all indoors, no highway riding</div></div>
+    <div class="swap"><div>A club night that turns out to be shut</div><div class="arrow">→</div><div class="to">Mandovi casino boats in Panjim — indoors, open year-round, and a taxi ride rather than a wet convoy</div></div>
+  </div>
+  <div class="panel">
+    <h4>Wet-weather riding, non-negotiable</h4>
+    <ul>
+      <li>No riding in active heavy rain. Pull in, wait it out, order coffee. Goan downpours are short.</li>
+      <li>Painted road markings, manhole covers, and diesel patches at junctions are the hazard, not the rain itself.</li>
+      <li>Ponchos, not umbrellas. Dry bag or bin liner for phones and passports.</li>
+      <li>Double the following distance in the convoy. Brake in a straight line, not mid-corner.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ RIDING ============ -->
+<section class="sec" id="riding">
+  <div class="sec-label">Ground rules</div>
+  <h2>Eight people, four scooters</h2>
+  <p class="lede">Four licensed riders and four bikes means no rotation and no unlicensed riding — which is the right setup. These are the rules that keep it that way.</p>
+  <div class="grid2">
+    <div class="panel">
+      <h4>Before you take the keys</h4>
+      <ul>
+        <li>Video all four scooters, all four sides, before paying.</li>
+        <li>Eight helmets. Goa enforces pillion helmets and traffic police in North Goa check.</li>
+        <li>Photograph the RC book and insurance for each bike; keep it on your phone.</li>
+        <li>Never hand over an original licence or passport as deposit — photocopy plus cash.</li>
+        <li>Check tyre tread and brakes yourself. Monsoon roads punish bald tyres.</li>
+        <li>Agree the fuel-return level and photograph the gauge.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h4>Convoy discipline</h4>
+      <ul>
+        <li>Only the four licensed riders ride. No swapping "just for a bit".</li>
+        <li>Nobody rides alone at night. Four bikes leave together and arrive together.</li>
+        <li>Last bike sets the pace; front bike checks mirrors at every turn.</li>
+        <li>Share live location in one group chat for every night ride.</li>
+        <li>Cows on the road after dark are the classic North Goa crash. Ride to your headlight.</li>
+        <li>Zero alcohol for riders. The plan is already built around it — keep it that way.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NUMBERS ============ -->
+<section class="sec" id="numbers">
+  <div class="sec-label">Reference</div>
+  <h2>Numbers and documents</h2>
+  <p class="lede">Print this page, or screenshot this section. Fill the blanks once and everyone gets the same copy.</p>
+  <div class="contacts">
+    <div class="card"><div class="k">All emergencies</div><div class="v">112</div><div class="d">Single national number — police, fire, ambulance</div></div>
+    <div class="card"><div class="k">Ambulance</div><div class="v">108</div><div class="d">Free emergency ambulance across Goa</div></div>
+    <div class="card"><div class="k">Highway accident</div><div class="v">1073</div><div class="d">Road accident and highway assistance</div></div>
+    <div class="card"><div class="k">Rail enquiry</div><div class="v">139</div><div class="d">Running status, PNR, reschedules</div></div>
+    <div class="card"><div class="k">Thalassa</div><div class="v">+91 98500 33537</div><div class="d">Confirm branch and date when you call</div></div>
+    <div class="card"><div class="k">Plot 77 by HNH</div><div class="v"><span class="blank"></span></div><div class="d">Fill in from your booking</div></div>
+    <div class="card"><div class="k">Hosteller Arpora</div><div class="v"><span class="blank"></span></div><div class="d">Fill in from your booking</div></div>
+    <div class="card"><div class="k">Scooter vendor — Baga</div><div class="v"><span class="blank"></span></div><div class="d">Not booked yet</div></div>
+    <div class="card"><div class="k">Scooter vendor — Arpora</div><div class="v"><span class="blank"></span></div><div class="d">Not booked yet</div></div>
+    <div class="card"><div class="k">Karmali pickup driver</div><div class="v"><span class="blank"></span></div><div class="d">Book before you leave Kolkata</div></div>
+    <div class="card"><div class="k">GOX airport transfer</div><div class="v"><span class="blank"></span></div><div class="d">8-seater, Sat 3 Oct, 10:45</div></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h4>Everyone carries</h4>
+    <ul>
+      <li>Government photo ID — mandatory for train travel and hotel check-in.</li>
+      <li>Riders: original driving licence on their person, every ride.</li>
+      <li>Printed or offline PNRs for both trains and both flights.</li>
+      <li>Offline map of North Goa downloaded before you land. Signal drops on the Divar and Morjim roads.</li>
+      <li>Cash. Mapusa Market, ferries, and small shacks are cash-first.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ CHECKLIST ============ -->
+<section class="checklist-section" id="checklist">
+  <div class="wrap">
+    <div class="sec-label">Before you go</div>
+    <h2>Checklist</h2>
+    <p class="lede">Tap to tick. Items marked <span class="pri">CALL</span> need a phone call, not a website — these are the ones that decide whether a day happens.</p>
+    <div class="progress-text" id="progressText">0 of 0 done</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    <div class="cl-grid" id="clGrid">
+      <div class="cl-group">
+        <h4>Blocking — do these first</h4>
+        <ul>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Confirm 12133 monsoon-timetable Karmali arrival<span class="pri">CALL</span></span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Book scooter vendor — Baga leg, 4 bikes, 8 helmets</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Book scooter vendor — Arpora leg</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Book Karmali → Baga transfer for 8 + luggage</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Book GOX transfer, Sat 3 Oct 10:45, 8-seater</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Reserve Thalassa, confirm branch<span class="pri">CALL</span></span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Agree 09:30 early check-in at Plot 77 in writing</span></button></li>
+        </ul>
+      </div>
+      <div class="cl-group">
+        <h4>Season checks — one week out</h4>
+        <ul>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Is Anjuna flea market open on 30 Sep?<span class="pri">CALL</span></span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Is LPK Waterfront open Tue 29 Sep?<span class="pri">CALL</span></span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Is Hammerzz open Thu 1 Oct?<span class="pri">CALL</span></span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Is Tito's running Sun 27 Sep?<span class="pri">CALL</span></span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Old Goa–Divar ferry running?</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Baga water sports operating yet?</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Re-confirm 6E flight numbers and Hyderabad connection</span></button></li>
+        </ul>
+      </div>
+      <div class="cl-group">
+        <h4>Already locked</h4>
+        <ul>
+          <li><button aria-pressed="true"><span class="box">✓</span><span class="txt">E-catering booked for the 12262 leg</span></button></li>
+          <li><button aria-pressed="true"><span class="box">✓</span><span class="txt">Return confirmed from GOX (Mopa), not GOI</span></button></li>
+          <li><button aria-pressed="true"><span class="box">✓</span><span class="txt">4 licensed riders for 4 scooters</span></button></li>
+          <li><button aria-pressed="true"><span class="box">✓</span><span class="txt">Karmali chosen over Madgaon as the drop</span></button></li>
+        </ul>
+      </div>
+      <div class="cl-group">
+        <h4>On the day</h4>
+        <ul>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Video-record each scooter before accepting</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Count 8 helmets at pickup</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Photograph RC + insurance for all 4 bikes</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Refuse to leave original licences as deposit</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Track 12262 on NTES the night before</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Download offline map of North Goa</span></button></li>
+        </ul>
+      </div>
+      <div class="cl-group">
+        <h4>Places — nightlife &amp; food</h4>
+        <ul>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Club Tito's — Baga</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">LPK Waterfront — Nerul</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Hammerzz — Baga Rd</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">SinQ — Candolim</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Fabs Bebinca — Ribandar</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Confeitaria 31 De Janeiro — Panjim</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Baba Au Rhum — Anjuna</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Artjuna — Anjuna</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Vinayak Family Restaurant — Assagao</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Thalassa — Vagator</span></button></li>
+        </ul>
+      </div>
+      <div class="cl-group">
+        <h4>Places — sights &amp; coast</h4>
+        <ul>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Fontainhas Latin Quarter — Panjim</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Chapel of St. Sebastian</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Basilica of Bom Jesus + Sé Cathedral</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Divar Island via Old Goa ferry</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Fort Aguada</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Chapora Fort</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Mapusa Market</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Baga &amp; Candolim beaches</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Morjim &amp; Ashwem beaches</span></button></li>
+          <li><button aria-pressed="false"><span class="box">✓</span><span class="txt">Vagator / Ozran sunset</span></button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>GOA EXPEDITION · 25 SEP – 03 OCT 2026 · 8 RIDERS · 4 SCOOTERS · PLAN VALIDATED, NOT BOOKED</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- ROUTE DATA ---------------- */
+  var dayRoutes = {
+    d2: [
+      {name:"Karmali Railway Station", lat:15.490463,  lng:73.9245664},
+      {name:"Plot 77 by HNH, Baga",    lat:15.5712425, lng:73.7564242, home:true},
+      {name:"Baga Beach",              lat:15.5581911, lng:73.7506843},
+      {name:"Club Tito's",             lat:15.5563293, lng:73.7530218},
+      {name:"Plot 77 (home)",          lat:15.5712425, lng:73.7564242, home:true}
+    ],
+    /* Reordered: Panjim -> Ribandar -> Old Goa -> Old Goa ferry jetty -> Assagao.
+       Ribandar's ferry serves Chorao, not Divar; Divar is reached from the Old Goa jetty. */
+    d3: [
+      {name:"Plot 77, Baga",                 lat:15.5712425, lng:73.7564242, home:true},
+      {name:"Fontainhas, Panaji",            lat:15.4941033, lng:73.8300775},
+      {name:"Fabs Bebinca area, Ribandar",   lat:15.5054662, lng:73.8653606},
+      {name:"Basilica of Bom Jesus",         lat:15.5008238, lng:73.9114061},
+      {name:"Se Cathedral",                  lat:15.5038077, lng:73.9121499},
+      {name:"Old Goa Ferry Terminal (Divar)", lat:15.5068254, lng:73.9134445},
+      {name:"Vinayak Family Rest., Assagao", lat:15.5973414, lng:73.7726981},
+      {name:"Plot 77 (home)",                lat:15.5712425, lng:73.7564242, home:true}
+    ],
+    d4: [
+      {name:"Plot 77, Baga",         lat:15.5712425, lng:73.7564242, home:true},
+      {name:"Fort Aguada",           lat:15.4922519, lng:73.7737462},
+      {name:"Candolim Beach",        lat:15.5179749, lng:73.7626122},
+      {name:"LPK Waterfront, Nerul", lat:15.5146909, lng:73.7833663},
+      {name:"Plot 77 (home)",        lat:15.5712425, lng:73.7564242, home:true}
+    ],
+    d5: [
+      {name:"Plot 77, Baga",     lat:15.5712425, lng:73.7564242, home:true},
+      {name:"Mapusa Municipal Market", lat:15.5884770, lng:73.8121308},
+      {name:"Chapora Fort",      lat:15.6046375, lng:73.7369631},
+      {name:"Thalassa, Vagator", lat:15.5947914, lng:73.7354879},
+      {name:"Plot 77 (home)",    lat:15.5712425, lng:73.7564242, home:true}
+    ],
+    d6: [
+      {name:"Plot 77, Baga",              lat:15.5712425, lng:73.7564242},
+      {name:"The Hosteller Goa, Arpora",  lat:15.5719887, lng:73.7630007, home:true},
+      {name:"Baba Au Rhum, Anjuna",       lat:15.5765268, lng:73.7557446},
+      {name:"Ozran Beach, Vagator",       lat:15.5937190, lng:73.7344677},
+      {name:"Hammerzz, Baga Rd",          lat:15.5649925, lng:73.7508447},
+      {name:"The Hosteller (home)",       lat:15.5719887, lng:73.7630007, home:true}
+    ],
+    /* Reordered: Morjim (4.3 km from Artjuna) before Ashwem (7.7 km). */
+    d7: [
+      {name:"The Hosteller, Arpora",  lat:15.5719887, lng:73.7630007, home:true},
+      {name:"Artjuna Cafe, Anjuna",   lat:15.5807243, lng:73.7476299},
+      {name:"Morjim Beach",           lat:15.6173203, lng:73.7335798},
+      {name:"Ashwem Beach",           lat:15.6437966, lng:73.7174025},
+      {name:"SinQ Nightclub, Candolim",lat:15.501389, lng:73.771646},
+      {name:"The Hosteller (home)",   lat:15.5719887, lng:73.7630007, home:true}
+    ],
+    /* Split out of day 7 so the distance figure reflects the airport run alone. */
+    d8: [
+      {name:"The Hosteller, Arpora",             lat:15.5719887, lng:73.7630007, home:true},
+      {name:"Manohar International Airport (GOX)",lat:15.7312475, lng:73.8669245}
+    ]
+  };
+
+  /* ---------------- HELPERS ---------------- */
+  function haversineKm(a, b){
+    var R = 6371;
+    var dLat = (b.lat - a.lat) * Math.PI/180;
+    var dLng = (b.lng - a.lng) * Math.PI/180;
+    var lat1 = a.lat * Math.PI/180, lat2 = b.lat * Math.PI/180;
+    var h = Math.pow(Math.sin(dLat/2),2) + Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin(dLng/2),2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  function straightLineFallback(map, points, statsEl, reason){
+    var latlngs = points.map(function(p){ return [p.lat, p.lng]; });
+    L.polyline(latlngs, {color:'#B4532A', weight:3, opacity:0.75, dashArray:'6 9'}).addTo(map);
+    var total = 0;
+    for(var i=0;i<points.length-1;i++){ total += haversineKm(points[i], points[i+1]); }
+    statsEl.textContent = '~' + total.toFixed(1) + ' km straight-line. ' + reason +
+      ' Real road distance will be higher — the dashed line is not a route.';
+    statsEl.className = 'route-stats failed';
+  }
+
+  /* OSRM's public demo server rate-limits. Requests are queued and spaced
+     rather than fired in parallel, which is what broke the original file. */
+  var queue = [], queueRunning = false;
+  function enqueue(job){ queue.push(job); if(!queueRunning) runQueue(); }
+  function runQueue(){
+    if(!queue.length){ queueRunning = false; return; }
+    queueRunning = true;
+    var job = queue.shift();
+    job(function(){ setTimeout(runQueue, 800); });
+  }
+
+  function fetchRoute(map, points, statsEl, done){
+    var coordStr = points.map(function(p){ return p.lng + ',' + p.lat; }).join(';');
+    var url = 'https://router.project-osrm.org/route/v1/driving/' + coordStr +
+              '?overview=full&geometries=geojson';
+    var controller = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function(){ if(controller) controller.abort(); }, 9000);
+
+    fetch(url, controller ? {signal:controller.signal} : undefined)
+      .then(function(res){
+        if(!res.ok) throw new Error('status ' + res.status);
+        return res.json();
+      })
+      .then(function(data){
+        clearTimeout(timer);
+        if(!data.routes || !data.routes.length) throw new Error('no route');
+        var route = data.routes[0];
+        var latlngs = route.geometry.coordinates.map(function(c){ return [c[1], c[0]]; });
+        var line = L.polyline(latlngs, {color:'#B4532A', weight:4, opacity:0.9}).addTo(map);
+        map.fitBounds(line.getBounds(), {padding:[28,28]});
+        var km = (route.distance/1000).toFixed(1);
+        var mins = Math.round(route.duration/60);
+        statsEl.textContent = km + ' km · ~' + mins + ' min driving estimate. Scooters in traffic ' +
+          'or rain will be slower — add a third on top for planning.';
+        statsEl.className = 'route-stats';
+        done();
+      })
+      .catch(function(err){
+        clearTimeout(timer);
+        straightLineFallback(map, points, statsEl,
+          'Routing service unavailable (' + (err && err.message ? err.message : 'error') + ').');
+        done();
+      });
+  }
+
+  function initDayMap(dayKey, points){
+    var el = document.getElementById('map-' + dayKey);
+    var statsEl = document.getElementById('stats-' + dayKey);
+    if(!el || !statsEl) return;
+
+    var map = L.map(el, {scrollWheelZoom:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    map.fitBounds(L.latLngBounds(points.map(function(p){ return [p.lat, p.lng]; })), {padding:[28,28]});
+
+    points.forEach(function(p, i){
+      var icon = L.divIcon({
+        className: 'stop-pin' + (p.home ? ' home' : ''),
+        html: String(i+1),
+        iconSize: [26,26],
+        iconAnchor: [13,13],      /* was missing — pins sat offset from the actual point */
+        popupAnchor: [0,-14]
+      });
+      L.marker([p.lat, p.lng], {icon:icon, title:p.name}).addTo(map).bindPopup(p.name);
+    });
+
+    statsEl.textContent = 'Waiting for routing service…';
+    enqueue(function(done){
+      statsEl.textContent = 'Calculating route…';
+      fetchRoute(map, points, statsEl, done);
+    });
+  }
+
+  /* Maps build only when scrolled near — eight Leaflet instances at once is
+     wasteful and made the whole page stutter on mobile. */
+  function setupLazyMaps(){
+    var keys = Object.keys(dayRoutes);
+    if(!('IntersectionObserver' in window)){
+      keys.forEach(function(k){ initDayMap(k, dayRoutes[k]); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting) return;
+        var key = entry.target.id.replace('map-','');
+        io.unobserve(entry.target);
+        initDayMap(key, dayRoutes[key]);
+      });
+    }, {rootMargin:'300px 0px'});
+    keys.forEach(function(k){
+      var el = document.getElementById('map-' + k);
+      if(el) io.observe(el);
+    });
+  }
+
+  /* ---------------- CHECKLIST ---------------- */
+  function setupChecklist(){
+    var grid = document.getElementById('clGrid');
+    if(!grid) return;
+    var buttons = Array.prototype.slice.call(grid.querySelectorAll('button'));
+    var fill = document.getElementById('progressFill');
+    var text = document.getElementById('progressText');
+
+    function refresh(){
+      var done = buttons.filter(function(b){ return b.getAttribute('aria-pressed') === 'true'; }).length;
+      var pct = buttons.length ? Math.round(done / buttons.length * 100) : 0;
+      fill.style.width = pct + '%';
+      text.textContent = done + ' of ' + buttons.length + ' done · ' + pct + '%';
+    }
+
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+        refresh();
+      });
+    });
+    refresh();
+  }
+
+  /* ---------------- NAV HIGHLIGHT ---------------- */
+  function setupNav(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.daynav a'));
+    var map = {};
+    var targets = [];
+    links.forEach(function(a){
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if(el){ map[id] = a; targets.push(el); }
+    });
+    if(!('IntersectionObserver' in window) || !targets.length) return;
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var link = map[entry.target.id];
+        if(!link) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('current'); });
+          link.classList.add('current');
+        }
+      });
+    }, {rootMargin:'-64px 0px -70% 0px'});
+    targets.forEach(function(t){ io.observe(t); });
+  }
+
+  function boot(){
+    setupLazyMaps();
+    setupChecklist();
+    setupNav();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+
+</body>
+</html>
