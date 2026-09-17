@@ -1,7 +1,7 @@
 /* Offline shell for the Goa itinerary.
    The whole plan — times, notes, numbers, Google Maps links — works with no signal.
    Map tiles are not cached; they need data. */
-var CACHE = 'goa-v1';
+var CACHE = 'goa-v2';
 var SHELL = [
   './',
   './index.html',
@@ -33,20 +33,40 @@ self.addEventListener('activate', function(e){
   );
 });
 
-self.addEventListener('fetch', function(e){
-  var req = e.request;
-  if(req.method !== 'GET') return;
+/* Cache.put() throws on anything that isn't http(s) — browser extensions route
+   chrome-extension:// requests through here — and on partial (206) responses. */
+function cacheable(req, res){
+  if(req.method !== 'GET') return false;
+  if(req.url.indexOf('http') !== 0) return false;
+  if(res && res.type !== 'opaque' && res.status !== 200) return false;
+  return true;
+}
 
-  /* Never cache tiles or the routing API — they are large and change. */
-  var url = req.url;
+function put(req, res){
+  if(!cacheable(req, res)) return;
+  var copy = res.clone();
+  caches.open(CACHE).then(function(c){
+    return c.put(req, copy);
+  }).catch(function(){ /* quota, opaque redirect, unsupported scheme — never fatal */ });
+}
+
+self.addEventListener('fetch', function(e){
+  var req = e.request, url = req.url;
+
+  /* Only ever touch plain http(s) GETs. Everything else goes straight to the network. */
+  if(req.method !== 'GET' || url.indexOf('http') !== 0) return;
+
+  /* Range requests come back 206 and cannot be cached. */
+  if(req.headers.get('range')) return;
+
+  /* Tiles and routing are large and volatile — never cache them. */
   if(url.indexOf('tile.openstreetmap.org') > -1 || url.indexOf('router.project-osrm.org') > -1) return;
 
   /* Navigations: network first so an updated plan wins, cache as the offline fallback. */
   if(req.mode === 'navigate'){
     e.respondWith(
       fetch(req).then(function(res){
-        var copy = res.clone();
-        caches.open(CACHE).then(function(c){ c.put('./index.html', copy); });
+        put(new Request('./index.html'), res);
         return res;
       }).catch(function(){
         return caches.match('./index.html').then(function(r){ return r || Response.error(); });
@@ -59,10 +79,7 @@ self.addEventListener('fetch', function(e){
   e.respondWith(
     caches.match(req).then(function(hit){
       return hit || fetch(req).then(function(res){
-        if(res && (res.ok || res.type === 'opaque')){
-          var copy = res.clone();
-          caches.open(CACHE).then(function(c){ c.put(req, copy); });
-        }
+        put(req, res);
         return res;
       }).catch(function(){ return hit; });
     })

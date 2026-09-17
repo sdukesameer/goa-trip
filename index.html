@@ -71,6 +71,7 @@ i{font-style:italic}
   padding:6px 10px; border-radius:99px; border:1px solid var(--line); background:var(--card); white-space:nowrap;
 }
 .pills a.current{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.theme.inst{background:var(--teal); border-color:var(--teal); color:#fff; font-weight:700}
 .theme{flex:0 0 auto; width:32px; height:32px; border-radius:99px; border:1px solid var(--line);
   background:var(--card); color:var(--ink2); cursor:pointer; font-size:14px; line-height:1}
 
@@ -106,10 +107,10 @@ hr.rule{border:0; border-top:1px solid var(--line); margin:34px 0 0}
 .alerts{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:12px}
 .alert{background:var(--card); border:1px solid var(--line); border-top:3px solid var(--ink3);
   border-radius:13px; padding:16px; box-shadow:var(--sh)}
-.alert.stop{border-top-color:var(--red)} .alert.good{border-top-color:var(--teal)}
+.alert.cut{border-top-color:var(--red)} .alert.good{border-top-color:var(--teal)}
 .tag{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
   padding:3px 8px; border-radius:99px; margin-bottom:9px}
-.stop-a .tag,.alert.stop .tag{background:var(--red-s); color:var(--red)}
+.alert.cut .tag{background:var(--red-s); color:var(--red)}
 .alert.good .tag{background:var(--teal-s); color:var(--teal)}
 .alert h3{font-size:17px; margin-bottom:7px}
 .alert p{font-size:14px; color:var(--ink2); margin-bottom:.65em}
@@ -138,8 +139,8 @@ hr.rule{border:0; border-top:1px solid var(--line); margin:34px 0 0}
 
 /* timeline: stacked on phones, two-column from 560px */
 .stops{padding:2px 16px}
-.stop{padding:13px 0; border-bottom:1px solid var(--line2)}
-.stop:last-child{border-bottom:0}
+.stops .stop{padding:13px 0; border-bottom:1px solid var(--line2)}
+.stops .stop:last-child{border-bottom:0}
 .t{font-size:11.5px; font-weight:700; color:var(--teal); letter-spacing:.02em; margin-bottom:4px;
   font-variant-numeric:tabular-nums; text-transform:uppercase}
 .s-name{font-weight:600; font-size:15.5px; margin-bottom:4px; overflow-wrap:anywhere}
@@ -165,10 +166,36 @@ hr.rule{border:0; border-top:1px solid var(--line); margin:34px 0 0}
 .night i{font-style:normal; font-size:14px}
 
 @media (min-width:560px){
-  .stop{display:flex; gap:15px}
-  .t{flex:0 0 96px; margin-bottom:0; padding-top:2px; font-size:12px}
-  .s-body{flex:1}
+  .stops .stop{display:flex; gap:15px}
+  .stops .t{flex:0 0 96px; margin-bottom:0; padding-top:2px; font-size:12px}
+  .stops .s-body{flex:1}
 }
+
+/* ---- reorder ---- */
+.daybar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+  background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+  margin-bottom:14px; box-shadow:var(--sh)}
+.db-t{font-size:12.8px; color:var(--ink2); flex:1 1 260px}
+.db-a{display:flex; gap:7px; flex:0 0 auto}
+.db-a button{background:var(--line2); border:1px solid var(--line); color:var(--ink2); cursor:pointer;
+  border-radius:8px; padding:7px 12px; font:inherit; font-size:12.5px; font-weight:600}
+.db-a button:hover{color:var(--ink)}
+.db-a button.done{background:var(--teal); border-color:var(--teal); color:#fff}
+.day-row{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+.day-tools{display:flex; align-items:center; gap:4px; flex:0 0 auto}
+.dbtn{width:26px; height:26px; border-radius:7px; border:1px solid var(--line); background:var(--card);
+  color:var(--ink3); cursor:pointer; font-size:10px; line-height:1; padding:0}
+.dbtn:hover{color:var(--ink)}
+.dbtn[disabled]{opacity:.3; cursor:default}
+.grip{display:none; color:var(--ink3); cursor:grab; font-size:16px; padding:0 3px; line-height:1}
+@media (min-width:700px){ .grip{display:inline-block} }
+.day.dragging{opacity:.45}
+.day.over{outline:2px dashed var(--terra); outline-offset:3px}
+.moved{display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  background:var(--terra-s); color:var(--terra); padding:2.5px 7px; border-radius:5px; margin-left:7px}
+.lockwarn{margin:0 16px 12px; padding:11px 13px; border-radius:10px; font-size:13px;
+  background:var(--red-s); color:var(--ink2); border-left:3px solid var(--red)}
+.lockwarn b{color:var(--red)}
 
 /* ---- panels / cards ---- */
 .grid{display:grid; gap:12px}
@@ -300,6 +327,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       <a href="#rain">Rain</a>
       <a href="#list">Checklist</a>
     </nav>
+    <button class="theme inst" id="topInstall" type="button" aria-label="Install to home screen" title="Install to home screen" hidden>⇩</button>
     <button class="theme" id="themeBtn" type="button" aria-label="Toggle dark mode">◐</button>
   </div>
 </div>
@@ -328,21 +356,21 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
     <p>You arrive in the last week of the monsoon, days before the season opens on 1 October. Most of the plan is unaffected. These are not — and three of them are on the list the group already put together.</p>
   </div>
   <div class="alerts">
-    <div class="alert stop">
+    <div class="alert cut">
       <span class="tag">Changes the last night</span>
       <h3>2 October is a statewide dry day</h3>
       <p>Gandhi Jayanti is Goa's one fixed dry day. Every casino is ordered shut for the full 24 hours and no alcohol is served anywhere — clubs, bars, shacks, shops.</p>
       <p>You don't drink, so the ban itself costs you nothing. The catch is second-order: <b>clubs don't open a room they can't run a bar in</b>. So Friday isn't a club night, and the big night moves to Thursday 1 October — which is season-opening night anyway.</p>
       <span class="swapline">Headline club night <s>Fri 2 Oct</s> → <b>Thu 1 Oct, Hammerzz</b></span>
     </div>
-    <div class="alert stop">
+    <div class="alert cut">
       <span class="tag">Cut it</span>
       <h3>Anjuna flea market won't be up on 30 September</h3>
       <p>30 Sep 2026 is a Wednesday, so the day is right — but the market is an October-to-April operation, shut through the monsoon. You miss it by one week.</p>
       <p>The replacement is better and falls on a day you're already free: <b>Mapusa Friday Market on 2 October</b> — year-round, Friday is its bazaar day, ten minutes from Arpora, and it's where Goans actually shop.</p>
       <span class="swapline"><s>Wed 30 Sep · Anjuna flea</s> → <b>Fri 2 Oct · Mapusa, 8:15 am</b></span>
     </div>
-    <div class="alert stop">
+    <div class="alert cut">
       <span class="tag">Cut it</span>
       <h3>Dudhsagar is closed, all of it</h3>
       <p>The Forest Department suspends the Collem jeep safari every monsoon and reopens around mid-to-late October, after your dates. The railway-track walk is banned and patrolled, with fines.</p>
@@ -372,11 +400,19 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
     <p>Sunrise is around 6:25 am all week; sunset slides from 6:27 pm on the 27th to 6:21 pm on the 3rd, with usable light for about 22 minutes after. <b>Tap any place name to open it in Google Maps</b>, or use the route button on each day to get the whole day's directions.</p>
   </div>
 
-<article class="day" id="d1">
+<div class="daybar"><span class="db-t">Drag a card, or use ▲▼, to move a day to a different date. The plan moves — the date stays put — and anything that breaks says so.</span><span class="db-a"><button type="button" id="shareBtn">Copy my version</button><button type="button" id="resetBtn">Reset</button></span></div><div id="dayList"><article class="day" id="d1" data-day="d1" draggable="true">
   <div class="day-top">
     <div class="dn"><b>1</b><small>On foot</small></div>
     <div class="day-head">
-      <div class="day-date">Sun 27 Sep</div>
+      <div class="day-row">
+        <div class="day-date">Sun 27 Sep</div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
       <h3>Arrive, and don't hire anything</h3>
       <p>Everything today is walking distance from the villa. No scooters, no taxi fares, nothing booked — you've all just travelled, and Baga is the one base where you don't need wheels to have a good first night.</p>
       <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5581911,73.7506843%7C15.5566,73.7513%7C15.5606,73.7494%7C15.5439,73.7553%7C15.5588,73.7538%7C15.5563293,73.7530218" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
@@ -456,11 +492,19 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   <div class="night"><i aria-hidden="true">◗</i><span>No bikes, no fares, no designated anyone. <b>Home by ~1:00 am</b>, on foot.</span></div>
 </article>
 
-<article class="day" id="d2">
+<article class="day" id="d2" data-day="d2" draggable="true">
   <div class="day-top">
     <div class="dn"><b>2</b><small>South</small></div>
     <div class="day-head">
-      <div class="day-date">Mon 28 Sep</div>
+      <div class="day-row">
+        <div class="day-date">Mon 28 Sep</div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
       <h3>South Goa, in one hired van</h3>
       <p>Chandor, Cabo de Rama, Agonda, Palolem — the entire south in a single day, done the only way it can safely be done. One 12-seater with a driver, out before the highway wakes up, everyone asleep on the way home.</p>
       <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.25578,73.99865%7C15.0896,73.9214%7C15.0447,73.9866%7C15.01,74.0233%7C15.5192,73.7643" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
@@ -533,11 +577,19 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   <div class="night"><i aria-hidden="true">◗</i><span>No club tonight, by design — six hours in a van is its own workout. <b>Home by ~9:45 pm</b>.</span></div>
 </article>
 
-<article class="day" id="d3">
+<article class="day" id="d3" data-day="d3" draggable="true">
   <div class="day-top">
     <div class="dn"><b>3</b><small>Central</small></div>
     <div class="day-head">
-      <div class="day-date">Tue 29 Sep</div>
+      <div class="day-row">
+        <div class="day-date">Tue 29 Sep</div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
       <h3>Scooters arrive, then the Latin Quarter and the river</h3>
       <p>Bikes at the door at 7:30 am, and straight into your longest riding day — Fontainhas, Old Goa, the free ferry to Divar. Tonight is a casino boat, on a Tuesday, which is why it costs about a thousand rupees less.</p>
       <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.4941033,73.8300775%7C15.5054662,73.8653606%7C15.5008238,73.9114061%7C15.4947,73.8296%7C15.5068254,73.9134445%7C15.4998,73.8286" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
@@ -610,11 +662,19 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   <div class="night"><i aria-hidden="true">◗</i><span>Big night, zero riding after dark. <b>Home by ~12:30 am</b> by cab.</span></div>
 </article>
 
-<article class="day" id="d4">
+<article class="day" id="d4" data-day="d4" draggable="true">
   <div class="day-top">
     <div class="dn"><b>4</b><small>Aguada</small></div>
     <div class="day-head">
-      <div class="day-date">Wed 30 Sep</div>
+      <div class="day-row">
+        <div class="day-date">Wed 30 Sep</div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
       <h3>Fort, water sports, karting — then your own pool</h3>
       <p>Short riding day; the whole thing fits inside 12 km. Then the best-value night of the week: a fish market run, your own kitchen, your own pool, and nobody watching the clock.</p>
       <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.4922519,73.7737462%7C15.4986,73.7669%7C15.5179749,73.7626122%7C15.5757,73.7684%7C15.543,73.764%7C15.5712425,73.7564242%7C15.5146909,73.7833663" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
@@ -703,11 +763,19 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   <div class="night"><i aria-hidden="true">◗</i><span>Home is where you already are. <b>Bed by ~1:00 am</b>, later if the pool wins.</span></div>
 </article>
 
-<article class="day" id="d5">
+<article class="day" id="d5" data-day="d5" draggable="true">
   <div class="day-top">
     <div class="dn"><b>5</b><small>Vagator</small></div>
     <div class="day-head">
-      <div class="day-date">Thu 1 Oct</div>
+      <div class="day-row">
+        <div class="day-date">Thu 1 Oct</div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
       <h3>Move 1.5 km, then the cliff and the big night</h3>
       <p>Season opens today and the beaches switch on. Everything after the move sits inside a five-kilometre circle — Chapora, Ozran, Thalassa, Hammerzz — so this is the biggest day of the trip and the shortest ride home of it.</p>
       <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5719887,73.7630007%7C15.5765268,73.7557446%7C15.6046375,73.7369631%7C15.593719,73.7344677%7C15.5947914,73.7354879%7C15.5649925,73.7508447" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
@@ -787,11 +855,19 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   <div class="night"><i aria-hidden="true">◗</i><span>Biggest day, shortest ride home — under 2 km, all of it lit. <b>Home by ~2:00 am</b>.</span></div>
 </article>
 
-<article class="day" id="d6">
+<article class="day" id="d6" data-day="d6" draggable="true">
   <div class="day-top">
     <div class="dn"><b>6</b><small>Far north</small></div>
     <div class="day-head">
-      <div class="day-date">Fri 2 Oct</div>
+      <div class="day-row">
+        <div class="day-date">Fri 2 Oct</div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
       <h3>First light at Parra, the Friday bazaar, then north until the road runs out</h3>
       <p>Gandhi Jayanti — a statewide dry day, so no club, which frees the entire day for daylight. Your longest ride and your best beaches, starting before sunrise.</p>
       <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5719887,73.7630007&destination=15.5719887,73.7630007&travelmode=driving&waypoints=15.582,73.802%7C15.588477,73.8121308%7C15.5807243,73.7476299%7C15.6173203,73.7335798%7C15.6437966,73.7174025%7C15.6608,73.7066%7C15.5973414,73.7726981" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
@@ -872,11 +948,19 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   <div class="night"><i aria-hidden="true">◗</i><span>Last night, and an early one on purpose — 11:00 am checkout and four scooters to hand back. <b>Home by ~10:30 pm</b>.</span></div>
 </article>
 
-<article class="day" id="d7">
+<article class="day" id="d7" data-day="d7" draggable="true">
   <div class="day-top">
     <div class="dn"><b>7</b><small>Out</small></div>
     <div class="day-head">
-      <div class="day-date">Sat 3 Oct</div>
+      <div class="day-row">
+        <div class="day-date">Sat 3 Oct</div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
       <h3>Hand back the keys</h3>
       <p>Checkout is 11:00 am and then you all scatter. The only thing that can go wrong today is the scooter deposits, so do those first and unhurried.</p>
     </div>
@@ -918,7 +1002,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   </div>
   <div class="cost"><span aria-hidden="true">₹</span><span>Get four deposits back in cash. That's today's entire job.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>Seven days, three regions, and every hard closure worked around. <b>Nothing on the list got skipped.</b></span></div>
-</article>
+</article></div>
 
   <hr class="rule">
 </section>
@@ -1505,14 +1589,150 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
   })();
 
   /* ---------- install prompt (Android/Chrome; iOS uses the Share sheet) ---------- */
-  var deferred=null, ib=document.getElementById('installBtn');
+  var deferred=null,
+      ib=document.getElementById('installBtn'),
+      tb=document.getElementById('topInstall');
+  function showInstall(on){
+    ib.style.display = on ? 'inline-block' : 'none';
+    tb.hidden = !on;
+  }
   window.addEventListener('beforeinstallprompt',function(e){
-    e.preventDefault(); deferred=e; ib.style.display='inline-block';
+    e.preventDefault();          /* we show our own button instead of Chrome's banner */
+    deferred=e; showInstall(true);
   });
-  ib.addEventListener('click',function(){
+  function doInstall(){
     if(!deferred) return;
-    deferred.prompt(); deferred=null; ib.style.display='none';
-  });
+    var d=deferred; deferred=null; showInstall(false);
+    d.prompt();
+    if(d.userChoice) d.userChoice.then(function(r){
+      if(r && r.outcome!=='accepted'){ deferred=d; showInstall(true); }
+    });
+  }
+  ib.addEventListener('click',doInstall);
+  tb.addEventListener('click',doInstall);
+  window.addEventListener('appinstalled',function(){ deferred=null; showInstall(false); });
+
+  /* ---------- day reordering ---------- */
+  (function(){
+    var META = {"slots":[{"date":"Sun 27 Sep","short":"Sun 27"},{"date":"Mon 28 Sep","short":"Mon 28"},{"date":"Tue 29 Sep","short":"Tue 29"},{"date":"Wed 30 Sep","short":"Wed 30"},{"date":"Thu 1 Oct","short":"Thu 1"},{"date":"Fri 2 Oct","short":"Fri 2"},{"date":"Sat 3 Oct","short":"Sat 3"}],"locks":{"d1":{"ok":[0],"why":"Check-in at Plot 77 is 11:00 am on the 27th. This day cannot happen anywhere else."},"d2":{"ok":[1,2,3],"why":"The south needs a full day and a 7:00 am start, so it has to sit before the 1 Oct move — and it can't be the arrival day."},"d3":{"ok":[1,2,3,4],"why":"Deltin entry jumps to ₹4,000+ on Fri, Sat and Sun, and every casino in Goa is shut on 2 October."},"d4":{"ok":[1,2,3],"why":"The pool and the kitchen are at Plot 77, so the villa party has to fall before you move out on 1 October."},"d5":{"ok":[4],"why":"Plot 77 checkout and Hosteller check-in are both fixed to 1 October."},"d6":{"ok":[5],"why":"Mapusa's bazaar only runs on Friday, and 2 Oct being a dry day is exactly why this evening has no club in it."},"d7":{"ok":[6],"why":"Checkout is 11:00 am on the 3rd."}},"order":["d1","d2","d3","d4","d5","d6","d7"]};
+    if(!META) return;
+    var list=document.getElementById('dayList');
+    if(!list) return;
+    var SLOTS=META.slots, LOCKS=META.locks, HOME=META.order.slice();
+    var order=HOME.slice();
+
+    function readOrder(){
+      var m=/[#&]order=([a-z0-9,]+)/i.exec(location.hash);
+      var src = m ? m[1].split(',') : null;
+      if(!src){ try{ src=JSON.parse(get('goa-order')||'null'); }catch(e){ src=null; } }
+      if(!src || src.length!==HOME.length) return HOME.slice();
+      /* only accept a genuine permutation, otherwise fall back */
+      var seen={}, out=[];
+      for(var i=0;i<src.length;i++){
+        if(HOME.indexOf(src[i])<0 || seen[src[i]]) return HOME.slice();
+        seen[src[i]]=1; out.push(src[i]);
+      }
+      return out;
+    }
+
+    function apply(save){
+      order.forEach(function(id,i){
+        var el=document.getElementById(id);
+        if(!el) return;
+        list.appendChild(el);                                  /* DOM order */
+        el.querySelector('.dn b').textContent=i+1;
+        var dateEl=el.querySelector('.day-date');
+        var home=HOME.indexOf(id);
+        dateEl.innerHTML=SLOTS[i].date + (i!==home ? ' <span class="moved">moved</span>' : '');
+
+        var lock=LOCKS[id], warn=el.querySelector('.lockwarn');
+        if(lock && lock.ok.indexOf(i)<0){
+          warn.innerHTML='<b>This breaks something.</b> '+lock.why;
+          warn.hidden=false;
+        } else { warn.hidden=true; }
+
+        var btns=el.querySelectorAll('.dbtn');
+        btns[0].disabled = (i===0);
+        btns[1].disabled = (i===order.length-1);
+
+        var pill=document.querySelector('.pills a[href="#'+id+'"]');
+        if(pill) pill.textContent=SLOTS[i].short;
+        var tab=document.querySelector('.mtab[data-day="'+id+'"]');
+        if(tab){
+          tab.querySelector('b').textContent=i+1;
+          tab.querySelector('span').textContent=SLOTS[i].short;
+          document.querySelector('.mtabs').appendChild(tab);
+        }
+      });
+      var changed = order.join(',')!==HOME.join(',');
+      document.getElementById('resetBtn').style.display = changed ? '' : 'none';
+      if(save){
+        set('goa-order', JSON.stringify(order));
+        if(changed) history.replaceState(null,'','#order='+order.join(','));
+        else history.replaceState(null,'',location.pathname);
+      }
+    }
+
+    function move(id,dir){
+      var i=order.indexOf(id), j=i+dir;
+      if(i<0||j<0||j>=order.length) return;
+      order.splice(j,0,order.splice(i,1)[0]);
+      apply(true);
+      document.getElementById(id).scrollIntoView({block:'center'});
+    }
+
+    list.addEventListener('click',function(e){
+      var b=e.target.closest('.dbtn'); if(!b) return;
+      var card=b.closest('.day');
+      move(card.getAttribute('data-day'), parseInt(b.getAttribute('data-move'),10));
+    });
+
+    /* drag and drop, desktop */
+    var dragId=null;
+    list.addEventListener('dragstart',function(e){
+      var card=e.target.closest('.day'); if(!card) return;
+      dragId=card.getAttribute('data-day');
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+      try{ e.dataTransfer.setData('text/plain',dragId); }catch(x){}
+    });
+    list.addEventListener('dragend',function(){
+      dragId=null;
+      [].forEach.call(list.querySelectorAll('.day'),function(c){ c.classList.remove('dragging','over'); });
+    });
+    list.addEventListener('dragover',function(e){
+      if(!dragId) return;
+      e.preventDefault();
+      var over=e.target.closest('.day');
+      [].forEach.call(list.querySelectorAll('.day'),function(c){ c.classList.remove('over'); });
+      if(over && over.getAttribute('data-day')!==dragId) over.classList.add('over');
+    });
+    list.addEventListener('drop',function(e){
+      if(!dragId) return;
+      e.preventDefault();
+      var over=e.target.closest('.day'); if(!over) return;
+      var to=order.indexOf(over.getAttribute('data-day')), from=order.indexOf(dragId);
+      if(to<0||from<0||to===from) return;
+      order.splice(to,0,order.splice(from,1)[0]);
+      apply(true);
+    });
+
+    document.getElementById('resetBtn').addEventListener('click',function(){
+      order=HOME.slice(); apply(true);
+    });
+    document.getElementById('shareBtn').addEventListener('click',function(){
+      var btn=this;
+      var url=location.origin+location.pathname+(order.join(',')!==HOME.join(',')?'#order='+order.join(','):'');
+      var done=function(){ btn.textContent='Link copied'; btn.classList.add('done');
+        setTimeout(function(){ btn.textContent='Copy my version'; btn.classList.remove('done'); },1800); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(done,function(){ prompt('Copy this link:',url); });
+      } else { prompt('Copy this link:',url); }
+    });
+
+    order=readOrder();
+    apply(false);
+  })();
 
   if('serviceWorker' in navigator){
     window.addEventListener('load',function(){
