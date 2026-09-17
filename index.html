@@ -254,7 +254,11 @@ td.num{font-variant-numeric:tabular-nums; white-space:nowrap; font-weight:600}
 .stop-pin{background:var(--terra); color:#fff; border:2px solid #fff; border-radius:50%;
   font:700 11px/22px Inter,sans-serif; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,.35)}
 .leaflet-container{font:inherit}
-#tripmap.static .leaflet-container,#tripmap.static .leaflet-pane{touch-action:pan-y !important}
+.static .leaflet-container,.static .leaflet-pane{touch-action:pan-y !important}
+.day-map{height:215px; margin:2px 16px 0; border-radius:11px; border:1px solid var(--line);
+  background:var(--line2); z-index:0}
+.rstats{font-size:11.5px; color:var(--ink3); padding:8px 16px 0; font-variant-numeric:tabular-nums}
+.rstats.est{color:var(--gold)}
 
 /* ---- install ---- */
 .install{background:var(--teal-s); border:1px solid color-mix(in srgb,var(--teal) 25%,transparent);
@@ -488,6 +492,8 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       </div>
     </div>
   </div>
+  <div class="day-map" id="map-d1" role="img" aria-label="Map of Sun 27 Sep"></div>
+  <div class="rstats" id="stats-d1">Loading route…</div>
   <div class="cost"><span aria-hidden="true">₹</span><span>₹0 in transport. Scooters start tomorrow-but-one, so you don't pay for bikes you'd only park.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>No bikes, no fares, no designated anyone. <b>Home by ~1:00 am</b>, on foot.</span></div>
 </article>
@@ -573,6 +579,8 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       </div>
     </div>
   </div>
+  <div class="day-map" id="map-d2" role="img" aria-label="Map of Mon 28 Sep"></div>
+  <div class="rstats" id="stats-d2">Loading route…</div>
   <div class="cost"><span aria-hidden="true">₹</span><span>₹6,000–8,000 for the van, split eight ways: <b>₹750–1,000 each</b> for 195 km, a driver, and the big grocery run on the way back.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>No club tonight, by design — six hours in a van is its own workout. <b>Home by ~9:45 pm</b>.</span></div>
 </article>
@@ -658,6 +666,8 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       </div>
     </div>
   </div>
+  <div class="day-map" id="map-d3" role="img" aria-label="Map of Tue 29 Sep"></div>
+  <div class="rstats" id="stats-d3">Loading route…</div>
   <div class="cost"><span aria-hidden="true">₹</span><span>Scooters start today, not Sunday: <b>4 bikes × ~₹500 × 4½ days ≈ ₹9,000</b>, about ₹1,125 each for the week.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>Big night, zero riding after dark. <b>Home by ~12:30 am</b> by cab.</span></div>
 </article>
@@ -759,6 +769,8 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       </div>
     </div>
   </div>
+  <div class="day-map" id="map-d4" role="img" aria-label="Map of Wed 30 Sep"></div>
+  <div class="rstats" id="stats-d4">Loading route…</div>
   <div class="cost"><span aria-hidden="true">₹</span><span>Tonight costs about <b>₹400 each</b> instead of ₹1,500 in a club, and it's the night you'll actually still be describing next year.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>Home is where you already are. <b>Bed by ~1:00 am</b>, later if the pool wins.</span></div>
 </article>
@@ -851,6 +863,8 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       </div>
     </div>
   </div>
+  <div class="day-map" id="map-d5" role="img" aria-label="Map of Thu 1 Oct"></div>
+  <div class="rstats" id="stats-d5">Loading route…</div>
   <div class="cost"><span aria-hidden="true">₹</span><span>One ₹300 taxi for the bags removes the single most avoidable crash risk of the week.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>Biggest day, shortest ride home — under 2 km, all of it lit. <b>Home by ~2:00 am</b>.</span></div>
 </article>
@@ -944,6 +958,8 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       </div>
     </div>
   </div>
+  <div class="day-map" id="map-d6" role="img" aria-label="Map of Fri 2 Oct"></div>
+  <div class="rstats" id="stats-d6">Loading route…</div>
   <div class="cost"><span aria-hidden="true">₹</span><span>A market morning and a beach day. Today costs fuel and a thali.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>Last night, and an early one on purpose — 11:00 am checkout and four scooters to hand back. <b>Home by ~10:30 pm</b>.</span></div>
 </article>
@@ -1448,13 +1464,32 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
 
   function ensureMap(){
     if(map || !window.L) return map;
-    var touch=L.Browser.mobile;
-    map=L.map(mapEl,{scrollWheelZoom:false, dragging:!touch, tap:false});
-    if(touch) mapEl.classList.add('static');
+    map=baseMap(mapEl);
+    return map;
+  }
+
+  var touchDev = window.L && L.Browser.mobile;
+
+  function baseMap(el){
+    var m=L.map(el,{scrollWheelZoom:false, dragging:!touchDev, tap:false});
+    if(touchDev) el.classList.add('static');
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
       attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom:19
-    }).addTo(map);
-    return map;
+    }).addTo(m);
+    return m;
+  }
+
+  function plot(m, d){
+    var g=L.layerGroup().addTo(m);
+    d.stops.forEach(function(s,i){
+      L.marker(s.ll,{
+        icon:L.divIcon({className:'stop-pin',html:String(i+1),iconSize:[24,24],iconAnchor:[12,12],popupAnchor:[0,-13]}),
+        title:s.n
+      }).addTo(g).bindPopup('<b>'+s.t+'</b><br>'+s.n);
+    });
+    var pl=L.polyline(d.pts,{color:'#B84D24',weight:3,opacity:.65,dashArray:'6 8'}).addTo(g);
+    m.fitBounds(pl.getBounds(),{padding:[26,26]});
+    return g;
   }
 
   function haversine(a,b){
@@ -1464,38 +1499,24 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
     return 2*R*Math.asin(Math.sqrt(h));
   }
 
-  function drawDay(key){
-    var d=DATA[key]; if(!d) return;
-    current=key;
-    if(!ensureMap()) return;
-    if(layer) map.removeLayer(layer);
-    layer=L.layerGroup().addTo(map);
-
-    d.stops.forEach(function(s,i){
-      L.marker(s.ll,{
-        icon:L.divIcon({className:'stop-pin',html:String(i+1),iconSize:[24,24],iconAnchor:[12,12],popupAnchor:[0,-13]}),
-        title:s.n
-      }).addTo(layer).bindPopup('<b>'+s.t+'</b><br>'+s.n);
-    });
-    var pl=L.polyline(d.pts,{color:'#B84D24',weight:3,opacity:.65,dashArray:'6 8'}).addTo(layer);
-    map.fitBounds(pl.getBounds(),{padding:[28,28]});
-
-    mTitle.textContent=d.label+' — '+d.title;
-    if(d.route){ mRoute.href=d.route; mRoute.style.display=''; }
-    else { mRoute.removeAttribute('href'); mRoute.style.display='none'; }
-    mList.innerHTML=d.stops.map(function(s,i){
-      return '<li><a href="https://www.google.com/maps/search/?api=1&query='+s.ll[0]+','+s.ll[1]+
-             '" target="_blank" rel="noopener"><span class="mi">'+(i+1)+'</span>'+
-             '<span class="mt">'+s.t+'</span><span>'+s.n+'</span></a></li>';
-    }).join('');
-
-    if(cache[key]){ mDist.textContent=cache[key]; return; }
-    var straight=0; for(var i=0;i<d.pts.length-1;i++) straight+=haversine(d.pts[i],d.pts[i+1]);
-    mDist.textContent='~'+straight.toFixed(0)+' km straight-line · checking roads…';
-    fetchDist(key,d);
+  var cache={}, pending={};
+  function straightKm(pts){
+    var t=0; for(var i=0;i<pts.length-1;i++) t+=haversine(pts[i],pts[i+1]);
+    return t;
   }
+  /* OSRM's demo server rate-limits, so each day is asked for once and shared. */
+  function distance(key, cb){
+    var d=DATA[key];
+    if(cache[key]){ cb(cache[key].txt, cache[key].est); return; }
+    (pending[key] = pending[key] || []).push(cb);
+    if(pending[key].length > 1) return;            /* a request is already in flight */
+    cb('~'+straightKm(d.pts).toFixed(0)+' km straight-line · checking roads…', true);
 
-  function fetchDist(key,d){
+    function settle(txt, est){
+      cache[key]={txt:txt, est:est};
+      (pending[key]||[]).forEach(function(f){ f(txt, est); });
+      pending[key]=[];
+    }
     var url='https://router.project-osrm.org/route/v1/driving/'+
       d.pts.map(function(p){return p[1]+','+p[0];}).join(';')+'?overview=false';
     var ctrl=('AbortController' in window)?new AbortController():null;
@@ -1506,18 +1527,34 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
         clearTimeout(t);
         if(!j.routes||!j.routes.length) throw 0;
         var km=(j.routes[0].distance/1000).toFixed(0), mn=Math.round(j.routes[0].duration/60);
-        var txt=km+' km · ~'+mn+' min moving'+(key==='d2'?' (in the van)':'')+
-          ' · '+d.stops.length+' stops';
-        cache[key]=txt;
-        if(current===key) mDist.textContent=txt;
+        settle(km+' km · ~'+mn+' min moving'+(key==='d2'?' (in the van)':'')+
+               ' · '+d.stops.length+' stops'+
+               (key==='d2'?'':' · scooters in traffic or rain are slower'), false);
       })
       .catch(function(){
         clearTimeout(t);
-        var s=0; for(var i=0;i<d.pts.length-1;i++) s+=haversine(d.pts[i],d.pts[i+1]);
-        var txt='~'+s.toFixed(0)+' km straight-line · '+d.stops.length+' stops · road distance is higher';
-        cache[key]=txt;
-        if(current===key) mDist.textContent=txt;
+        settle('~'+straightKm(d.pts).toFixed(0)+' km straight-line · '+d.stops.length+
+               ' stops · real road distance is higher', true);
       });
+  }
+
+  function drawDay(key){
+    var d=DATA[key]; if(!d) return;
+    current=key;
+    if(!ensureMap()) return;
+    if(layer) map.removeLayer(layer);
+    layer=plot(map,d);
+
+    mTitle.textContent=d.label+' — '+d.title;
+    if(d.route){ mRoute.href=d.route; mRoute.style.display=''; }
+    else { mRoute.removeAttribute('href'); mRoute.style.display='none'; }
+    mList.innerHTML=d.stops.map(function(s,i){
+      return '<li><a href="https://www.google.com/maps/search/?api=1&query='+s.ll[0]+','+s.ll[1]+
+             '" target="_blank" rel="noopener"><span class="mi">'+(i+1)+'</span>'+
+             '<span class="mt">'+s.t+'</span><span>'+s.n+'</span></a></li>';
+    }).join('');
+
+    distance(key,function(txt){ if(current===key) mDist.textContent=txt; });
   }
 
   var tabs=[].slice.call(document.querySelectorAll('.mtab'));
@@ -1536,6 +1573,36 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
     },{rootMargin:'300px 0px'});
     mo.observe(mapEl);
   } else { drawDay(tabs[0].getAttribute('data-day')); }
+
+  /* ---------- a map inside each day ---------- */
+  var dayMaps={};
+  function initDayMap(key){
+    if(dayMaps[key]) return;
+    var el=document.getElementById('map-'+key), st=document.getElementById('stats-'+key);
+    var d=DATA[key];
+    if(!el||!d||!window.L) return;
+    var m=baseMap(el);
+    plot(m,d);
+    dayMaps[key]=m;
+    if(st) distance(key,function(txt,est){ st.textContent=txt; st.className='rstats'+(est?' est':''); });
+  }
+  (function(){
+    var keys=Object.keys(DATA).filter(function(k){ return document.getElementById('map-'+k); });
+    if(!('IntersectionObserver' in window)){ keys.forEach(initDayMap); return; }
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        io.unobserve(e.target);
+        initDayMap(e.target.id.replace('map-',''));
+      });
+    },{rootMargin:'320px 0px'});
+    keys.forEach(function(k){ io.observe(document.getElementById('map-'+k)); });
+  })();
+
+  /* Reordering moves the cards in the DOM, which leaves Leaflet with a stale size. */
+  window.addEventListener('goa:reordered',function(){
+    Object.keys(dayMaps).forEach(function(k){ dayMaps[k].invalidateSize(); });
+  });
 
   /* ---------- checklist ---------- */
   (function(){
@@ -1666,6 +1733,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       });
       var changed = order.join(',')!==HOME.join(',');
       document.getElementById('resetBtn').style.display = changed ? '' : 'none';
+      window.dispatchEvent(new CustomEvent('goa:reordered'));
       if(save){
         set('goa-order', JSON.stringify(order));
         if(changed) history.replaceState(null,'','#order='+order.join(','));
