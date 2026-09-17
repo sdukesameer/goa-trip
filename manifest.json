@@ -1,0 +1,16 @@
+{
+  "name": "Goa · 27 Sep – 3 Oct",
+  "short_name": "Goa Trip",
+  "description": "Seven days in Goa for eight friends. North, Central and South — what's open, what's shut, and when to be where.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FBF7F1",
+  "theme_color": "#C2542A",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
