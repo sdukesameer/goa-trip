@@ -171,7 +171,27 @@ hr.rule{border:0; border-top:1px solid var(--line); margin:34px 0 0}
   .stops .s-body{flex:1}
 }
 
-/* ---- reorder ---- */
+/* ---- mode + stop reorder ---- */
+.mode{display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.05em; text-transform:none;
+  padding:2.5px 8px; border-radius:99px; margin-left:6px; vertical-align:1px}
+.m-sc{background:var(--teal-s); color:var(--teal)}
+.m-van{background:var(--gold-s); color:var(--gold)}
+.m-none{background:var(--line2); color:var(--ink3)}
+.sgrip,.sbtn{opacity:0; transition:opacity .12s}
+.stop:hover .sgrip,.stop:hover .sbtn,.stop:focus-within .sgrip,.stop:focus-within .sbtn{opacity:1}
+.sgrip{display:none; color:var(--ink3); cursor:grab; margin-left:7px; font-size:14px}
+.sbtn{width:20px; height:20px; margin-left:3px; border-radius:5px; border:1px solid var(--line);
+  background:var(--card); color:var(--ink3); cursor:pointer; font-size:8px; line-height:1; padding:0}
+.sbtn:hover{color:var(--ink)}
+.sbtn[disabled]{opacity:.25; cursor:default}
+@media (min-width:700px){ .sgrip{display:inline-block} }
+@media (hover:none){ .sgrip,.sbtn{opacity:1} }
+.stop.sdrag{opacity:.4}
+.stop.sover{outline:2px dashed var(--terra); outline-offset:2px; border-radius:8px}
+.reordered{margin:0 16px 12px; padding:9px 12px; border-radius:9px; font-size:12.3px;
+  background:var(--gold-s); color:var(--ink2); border-left:3px solid var(--gold)}
+
+/* ---- reorder ---- 
 .daybar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
   background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
   margin-bottom:14px; box-shadow:var(--sh)}
@@ -216,6 +236,25 @@ hr.rule{border:0; border-top:1px solid var(--line); margin:34px 0 0}
 .act .meta{font-size:11.5px; color:var(--ink3); border-top:1px solid var(--line2); padding-top:8px; overflow-wrap:anywhere}
 .act .meta b{color:var(--ink2); font-weight:600}
 .act.off{opacity:.6} .act.off .price{color:var(--red)}
+
+/* ---- book ahead ---- */
+.bkgrid{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+.bk{background:var(--card); border:1px solid var(--line); border-radius:13px; padding:15px; box-shadow:var(--sh);
+  display:flex; flex-direction:column}
+.bk-h{display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:6px}
+.bk h4{font-size:15px}
+.urg{flex:0 0 auto; font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  padding:3px 8px; border-radius:99px; white-space:nowrap}
+.u-now{background:var(--red-s); color:var(--red)}
+.u-this{background:var(--gold-s); color:var(--gold)}
+.u-one{background:var(--teal-s); color:var(--teal)}
+.u-if,.u-on,.u-Fri{background:var(--line2); color:var(--ink3)}
+.bk-w{font-size:11.5px; font-weight:600; color:var(--terra); margin-bottom:8px}
+.bk p{font-size:13.4px; color:var(--ink2); margin-bottom:10px; flex:1}
+.bk-f{border-top:1px solid var(--line2); padding-top:9px}
+.bk-f a{font-size:13px; font-weight:600; text-decoration:none}
+.bk-f .num{color:var(--teal)}
+.bk-f .find{color:var(--terra)}
 
 /* ---- tables ---- */
 .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain;
@@ -324,6 +363,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       <a href="#d6">Fri 2</a>
       <a href="#d7">Sat 3</a>
       <a href="#map">Map</a>
+      <a href="#book">Book</a>
       <a href="#scooter">Wheels</a>
       <a href="#do">Do</a>
       <a href="#nights">Nights</a>
@@ -339,12 +379,12 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
 <header class="hero">
   <div class="hero-in">
     <div class="eyebrow">North · Central · South · 8 friends</div>
-    <h1>Seven days,<br><em>nothing skipped</em></h1>
-    <p class="lede">Sunday 27 September to Saturday 3 October 2026. Villa doors open at 11:00 am on the 27th, checkout is 11:00 am on the 3rd, and everything between is built around what's actually open that week — because three of the things on everyone's list are not.</p>
+    <h1>Four days north,<br><em>two days south</em></h1>
+    <p class="lede">Sunday 27 September to Saturday 3 October 2026. Scooters for the four northern days, a tempo traveller for the two southern ones. Villa doors open at 11:00 am on the 27th, checkout is 11:00 am on the 3rd, and everything between is built around what is actually open that week — because three of the things on everyone's list are not.</p>
     <div class="facts">
-      <span class="fact"><b>7</b> days</span>
-      <span class="fact"><b>42</b> pinned places</span>
-      <span class="fact"><b>4</b> big nights</span>
+      <span class="fact"><b>4</b> days north · scooters</span>
+      <span class="fact"><b>2</b> days south · van</span>
+      <span class="fact"><b>43</b> pinned places</span>
       <span class="fact hot"><b>3</b> things shut</span>
       <span class="fact hot"><b>1</b> dry day</span>
     </div>
@@ -387,11 +427,24 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       <p>That's why this order exists — <b>quiet beaches first</b> (Palolem, Candolim, Sinquerim), switched-on ones after the 1st (Vagator, Morjim, Mandrem).</p>
     </div>
     <div class="alert good">
-      <span class="tag">Cheaper this way</span>
-      <h3>Day 1 no vehicle, Day 2 a van, scooters from Day 3</h3>
-      <p>You arrive tired and Baga is walkable, so nothing is hired on Sunday. Monday's far-south run needs a driver anyway, and the van does your big grocery shop on the way home for free.</p>
-      <p>Scooters start Tuesday and run to Saturday morning — <b>4½ days instead of 6½</b>. Same places, roughly ₹4,000 less across the group, and no bikes sitting in a driveway.</p>
-      <span class="swapline">Scooters <s>6½ days</s> → <b>4½ days</b> · Day 1 transport <s>taxis</s> → <b>₹0</b></span>
+      <span class="tag">Your question, answered</span>
+      <h3>Two south days earn their place — but only split this way</h3>
+      <p>Doing the same 195 km run twice would not be worth it. Split by region, it is: <b>Thursday is Canacona</b>
+         (Cabo de Rama, Agonda, Palolem — 195 km round trip) and <b>Friday is Salcete</b> (Mapusa bazaar, Chandor,
+         Rachol, Loutolim, Colva and Betalbatim — 135 km). Different roads, different Goa, and Friday is half the
+         driving.</p>
+      <p>If you'd rather save roughly <b>₹6,000</b> and a long day, cut Friday's van and keep 2 October in the north —
+         Thursday alone still gets you every South Goa postcard. That's the only part of this week that is genuinely
+         optional.</p>
+      <span class="swapline">Thu <b>deep south, 195 km</b> · Fri <b>mid south, 135 km</b> — not the same day twice</span>
+    </div>
+    <div class="alert good">
+      <span class="tag">Yes</span>
+      <h3>Central Goa comes free with the north</h3>
+      <p>Panjim is 15 km from Baga and Old Goa 25 km — both comfortable scooter runs from where you're sleeping. So
+         Central isn't a third region needing its own day; it's Monday, on the bikes, and it's the best wet-weather
+         day you have.</p>
+      <p>Which means the four "north" days actually cover north <i>and</i> central, and the van days are pure south.</p>
     </div>
   </div>
   <hr class="rule">
@@ -406,10 +459,10 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
 
 <div class="daybar"><span class="db-t">Drag a card, or use ▲▼, to move a day to a different date. The plan moves — the date stays put — and anything that breaks says so.</span><span class="db-a"><button type="button" id="shareBtn">Copy my version</button><button type="button" id="resetBtn">Reset</button></span></div><div id="dayList"><article class="day" id="d1" data-day="d1" draggable="true">
   <div class="day-top">
-    <div class="dn"><b>1</b><small>On foot</small></div>
+    <div class="dn"><b>1</b><small>Baga</small></div>
     <div class="day-head">
       <div class="day-row">
-        <div class="day-date">Sun 27 Sep</div>
+        <div class="day-date">Sun 27 Sep <span class="mode m-sc">🛵 scooters</span></div>
         <div class="day-tools">
           <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
           <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
@@ -417,93 +470,96 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
         </div>
       </div>
       <div class="lockwarn" hidden></div>
-      <h3>Arrive, and don't hire anything</h3>
-      <p>Everything today is walking distance from the villa. No scooters, no taxi fares, nothing booked — you've all just travelled, and Baga is the one base where you don't need wheels to have a good first night.</p>
-      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5581911,73.7506843%7C15.5566,73.7513%7C15.5606,73.7494%7C15.5439,73.7553%7C15.5588,73.7538%7C15.5563293,73.7530218" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
+      <h3>Keys, wheels, and the fort at sunset</h3>
+      <p>You land from eight directions, pick up four scooters, and get the best sunset in North Goa on your first evening. Nothing today is worth being upset about losing.</p>
+      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5566,73.7513%7C15.5581911,73.7506843%7C15.4922519,73.7737462%7C15.4986,73.7669%7C15.5192,73.7643%7C15.5563293,73.7530218" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
     </div>
   </div>
-  <div class="stops">
-    <div class="stop">
-      <div class="t">11:00 am</div>
+  <div class="stops" data-stops="d1">
+    <div class="stop" data-stop="0" draggable="true">
+      <div class="t">11:00 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">Check in — Plot 77 by HNH, Baga<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Drop bags, claim beds, and photograph the villa's existing damage and the meter readings before anyone unpacks.
-        <span class="why">You're arriving from eight different directions, so pick one arrival window in the group chat and one person who is definitely there at 11:00 am to take the keys. The worst version of today is three people sitting on bags outside a locked gate at 9:30 am.</span>
+        <div class="s-note">Drop bags, claim beds, photograph the villa's existing damage and the meter readings before anyone unpacks.
+        <span class="why">You're arriving separately, so agree one arrival window in the group chat and one person who is definitely there at 11:00 am to take the keys. The worst version of today is three people sitting on bags outside a locked gate.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">12:30 pm</div>
+    <div class="stop" data-stop="1" draggable="true">
+      <div class="t">12:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5581911,73.7506843" target="_blank" rel="noopener">Walk down to Baga Beach<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">About 1.2 km, fifteen minutes. Shoes off, feet in, work out who actually came to do what this week.
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">4 scooters delivered to the villa<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">book ahead</span></div>
+        <div class="s-note">Most Baga vendors will drop bikes at your door — ask when you book. ₹400–700 per bike per day. Activa or Jupiter over an NTorq if anyone is a nervous rider.
+        <span class="why">Video all four bikes, all four sides, before money changes hands: scratches, mirrors, tyre tread, fuel gauge, horn, indicators. Count <b>eight helmets, not four</b> — Goa enforces pillion helmets. Photograph each RC and insurance. Never leave an original licence or passport as deposit; photocopy plus cash.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">1:00 pm</div>
+    <div class="stop" data-stop="2" draggable="true">
+      <div class="t">1:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5566,73.7513" target="_blank" rel="noopener">Lunch — Souza Lobo or Britto's<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Two institutions on the sand, both older than the strip around them. Butter-garlic prawns and a fish thali shared between you is the fastest way to find out what everyone eats.
+        <div class="s-note">Two institutions on the sand, both older than the strip around them. Butter-garlic prawns and a fish thali shared out is the fastest way to learn what everyone eats.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">3:00 pm</div>
+    <div class="stop" data-stop="3" draggable="true">
+      <div class="t">2:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5606,73.7494" target="_blank" rel="noopener">Baga river mouth and the north rocks<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">better than the middle</span></div>
-        <div class="s-note">Walk north to where the Baga river meets the sea. The rocks and the moored boats there are the photograph; the crowded middle section of the beach is not.
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5581911,73.7506843" target="_blank" rel="noopener">Baga Beach and the river mouth<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-risk">red flags likely</span></div>
+        <div class="s-note">Walk north to where the Baga river meets the sea — the rocks and moored boats are the photograph, not the crowded middle. Water sports restart when the sea is declared safe, usually mid-September.
+        <span class="why">Assume a swimming ban for the first few days. Drishti lifeguards aren't negotiating: red flag means a beach day, not a swim day.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">4:30 pm</div>
+    <div class="stop" data-stop="4" draggable="true">
+      <div class="t">4:15 – 5:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5439,73.7553" target="_blank" rel="noopener">Calangute, or a shack and nothing at all<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-risk">red flags likely</span></div>
-        <div class="s-note">Calangute beach is 2.5 km south along the sand. Water sports restart when the sea is declared safe, usually mid-September onward, so parasailing and jet skis are a bonus today, not a plan.
-        <span class="why">Assume a swimming ban and lifeguard red flags for the first few days. Drishti lifeguards are not negotiating with you — if the flag is red it's a beach day, not a swim day.</span>
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4922519,73.7737462" target="_blank" rel="noopener">Fort Aguada, Sinquerim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Free. Ramparts, the enormous freshwater cistern, and the four-storey lighthouse — the best-preserved Portuguese fort in Goa, and the one that never fell. 6 km from the villa.
+        <span class="why">The fort compound shuts before the sun goes down, so do the walls now and take the sunset from the beach below. That's the same horizon without a guard moving you on.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">6:15 pm</div>
+    <div class="stop" data-stop="5" draggable="true">
+      <div class="t">5:30 – 6:50 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name">Sunset on Baga — 6:27 pm</div>
-        <div class="s-note">Usable light until about 6:49 pm. Low sun straight down the beach turns the whole strip gold for twenty minutes. Shoot into it with everyone backlit rather than lining people up facing the sun and squinting.
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4986,73.7669" target="_blank" rel="noopener">Sunset, Sinquerim Beach — 6:27 pm<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Light until about 6:49 pm. The headland with the fort wall running down into the water is the shot — get the group on the sand with the fort behind and shoot into the sun, backlit, not squinting at it.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">7:30 pm</div>
+    <div class="stop" data-stop="6" draggable="true">
+      <div class="t">7:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5588,73.7538" target="_blank" rel="noopener">Small shop for tomorrow's early breakfast<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">kitchen</span></div>
-        <div class="s-note">One of the Baga mini-marts, walkable. Eggs, bread, coffee, milk, fruit — just enough for a 6:30 am start tomorrow.
-        <span class="why">Don't do the big supermarket run today; it's a taxi each way. Tomorrow you have a van with a driver and Newton's is on the road home — the big shop rides back with you for free.</span>
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5192,73.7643" target="_blank" rel="noopener">Stock the kitchen — Newton's, Candolim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">four breakfasts</span></div>
+        <div class="s-note">Biggest supermarket in North Goa and directly on the way home. Eggs, poee and bread, coffee, tea, milk, curd, butter, jam, cereal, fruit, onions, chilli, oil, 2× 20 l water cans, snacks.
+        <span class="why">Eight people eating breakfast out is ~₹2,000 a morning and an hour gone each time. A stocked kitchen makes it ~₹400 and gets you on the road by 8:15 am, which is the only thing standing between you and the good light at Fontainhas tomorrow.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">9:30 pm</div>
+    <div class="stop" data-stop="7" draggable="true">
+      <div class="t">9:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5563293,73.7530218" target="_blank" rel="noopener">Tito's Lane — Tito's and Mambo's<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">confirm</span></div>
-        <div class="s-note">The oldest strip in Goan nightlife, 1.7 km from the villa, Bollywood and commercial EDM. Pool the money and take a table — the mocktail list is long and nobody cares what's in your glass.
-        <span class="why">It's the Sunday of a shoulder-season week, so call to check they're running and whether a table minimum applies. Walk, don't ride — and you couldn't ride tonight anyway, which is rather the point.</span>
+        <div class="s-note">The oldest strip in Goan nightlife, 1.7 km away, Bollywood and commercial EDM. Pool the money and take a table — the mocktail list is long and nobody cares what's in your glass.
+        <span class="why">Sunday of a shoulder-season week: call to check they're running and whether a table minimum applies. Walk or take one cab. Tito's Lane parking at midnight is its own ordeal and it's a fifteen-minute walk.</span>
         </div>
       </div>
     </div>
   </div>
+  <div class="reordered" hidden>Stops reordered — the times are the original slots, so check the durations still fit.</div>
   <div class="day-map" id="map-d1" role="img" aria-label="Map of Sun 27 Sep"></div>
   <div class="rstats" id="stats-d1">Loading route…</div>
-  <div class="cost"><span aria-hidden="true">₹</span><span>₹0 in transport. Scooters start tomorrow-but-one, so you don't pay for bikes you'd only park.</span></div>
-  <div class="night"><i aria-hidden="true">◗</i><span>No bikes, no fares, no designated anyone. <b>Home by ~1:00 am</b>, on foot.</span></div>
+  <div class="cost"><span aria-hidden="true">₹</span><span>Scooters start today — 4 bikes × ~₹500 × 4 days ≈ <b>₹8,000</b>, about ₹1,000 each for the North half.</span></div>
+  <div class="night"><i aria-hidden="true">◗</i><span>Walk to Tito's, walk home. <b>Bed by ~1:00 am</b>.</span></div>
 </article>
 
 <article class="day" id="d2" data-day="d2" draggable="true">
   <div class="day-top">
-    <div class="dn"><b>2</b><small>South</small></div>
+    <div class="dn"><b>2</b><small>Central</small></div>
     <div class="day-head">
       <div class="day-row">
-        <div class="day-date">Mon 28 Sep</div>
+        <div class="day-date">Mon 28 Sep <span class="mode m-sc">🛵 scooters</span></div>
         <div class="day-tools">
           <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
           <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
@@ -511,173 +567,86 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
         </div>
       </div>
       <div class="lockwarn" hidden></div>
-      <h3>South Goa, in one hired van</h3>
-      <p>Chandor, Cabo de Rama, Agonda, Palolem — the entire south in a single day, done the only way it can safely be done. One 12-seater with a driver, out before the highway wakes up, everyone asleep on the way home.</p>
-      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.25578,73.99865%7C15.0896,73.9214%7C15.0447,73.9866%7C15.01,74.0233%7C15.5192,73.7643" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
-    </div>
-  </div>
-  <div class="stops">
-    <div class="stop">
-      <div class="t">6:30 am</div>
-      <div class="s-body">
-        <div class="s-name">Breakfast at the villa, prepped last night</div>
-        <div class="s-note">Boil the eggs and set the coffee on Sunday night. Fill flasks, take fruit — you'll want it around 11:00 am.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">7:00 am</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">The van leaves Baga<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">book ahead</span></div>
-        <div class="s-note">One 12-seater Tempo Traveller with a driver, roughly ₹6,000–8,000 for the day including fuel, tolls and the driver.
-        <span class="why">The early start is the whole trick: NH66 through Panjim and Porvorim clogs after 8:30 am, and every hour you lose in the morning comes straight off Palolem in the evening. Agree the exact stop list and the price in writing the night before — an open-ended 'South Goa sightseeing' booking is how you end up at a spice shop that pays the driver a commission.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">9:15 – 10:45 am</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.25578,73.99865" target="_blank" rel="noopener">Braganza House, Chandor<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">new</span> <span class="chip c-call">phone first</span></div>
-        <div class="s-note">A 350-year-old Portuguese mansion still lived in by the family — ballroom, Belgian chandeliers, a long rosewood gallery, and a relic of St Francis Xavier in the private chapel. Two wings entered separately: about ₹150 a head on one side, a donation box on the other. Open most days, roughly 9:00/10:00 am to 5:00 pm.
-        <span class="why">It's a home, not a museum, and eight unannounced visitors is a lot — ring ahead. Carry cash, there's no card machine. Photography rules differ between the two wings, so ask before you shoot. Mid-morning is when the light rakes down the long gallery, which is exactly when you're there.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">12:15 – 1:30 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.0896,73.9214" target="_blank" rel="noopener">Cabo de Rama Fort<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">new</span></div>
-        <div class="s-note">Open 9:00 am–5:00 pm daily, free. Laterite ramparts, old cannons, the Chapel of St Anthony, and cliff viewpoints dropping straight into the Arabian Sea. The best photograph of the south leg is the cliff edge past the chapel.
-        <span class="why">In late September the grass is waist-high and violently green, which is the upside. The downside is that the drop is unfenced and wet laterite is slick — stay back from the edge, and nobody walks out to the point alone. 'The Cape' clifftop café next door is seasonal; call before you count on lunch there.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">2:00 – 3:15 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.0447,73.9866" target="_blank" rel="noopener">Lunch and a walk — Agonda Beach<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Two and a half kilometres of near-empty sand, fifteen minutes south of the fort. Calmer than Palolem, a better lunch this early in the season, and the one stop today where nobody needs to be doing anything.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">3:45 – 6:45 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.01,74.0233" target="_blank" rel="noopener">Palolem Beach<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-risk">pre-season</span></div>
-        <div class="s-note">The crescent everyone photographs. Walk it end to end, then take the rocks at the south end toward Colomb. Sunset 6:26 pm, light until about 6:48 pm.
-        <span class="why">Set expectations now: hut licences start on 1 October, so on the 28th Palolem is literally being rebuilt — scaffolding, few kitchens open, red flags, no swimming, and no boats to Butterfly or Honeymoon beach. What you get instead is the most famous bay in Goa with almost nobody on it. That's a photograph you cannot take in December.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">9:15 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5192,73.7643" target="_blank" rel="noopener">Grocery stop — Newton's, Candolim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">free ride</span></div>
-        <div class="s-note">Biggest supermarket in North Goa and directly on the road home. Four days of breakfasts, water cans, masalas, snacks — all of it carried in the van instead of on a scooter.
-        <span class="why">Eight people eating breakfast out every day is roughly ₹2,000 a morning and an hour lost each time. A stocked kitchen makes it about ₹400 and gets you on the road by 8:15 am, which is the single thing standing between you and the good light.</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="day-map" id="map-d2" role="img" aria-label="Map of Mon 28 Sep"></div>
-  <div class="rstats" id="stats-d2">Loading route…</div>
-  <div class="cost"><span aria-hidden="true">₹</span><span>₹6,000–8,000 for the van, split eight ways: <b>₹750–1,000 each</b> for 195 km, a driver, and the big grocery run on the way back.</span></div>
-  <div class="night"><i aria-hidden="true">◗</i><span>No club tonight, by design — six hours in a van is its own workout. <b>Home by ~9:45 pm</b>.</span></div>
-</article>
-
-<article class="day" id="d3" data-day="d3" draggable="true">
-  <div class="day-top">
-    <div class="dn"><b>3</b><small>Central</small></div>
-    <div class="day-head">
-      <div class="day-row">
-        <div class="day-date">Tue 29 Sep</div>
-        <div class="day-tools">
-          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
-          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
-          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
-        </div>
-      </div>
-      <div class="lockwarn" hidden></div>
-      <h3>Scooters arrive, then the Latin Quarter and the river</h3>
-      <p>Bikes at the door at 7:30 am, and straight into your longest riding day — Fontainhas, Old Goa, the free ferry to Divar. Tonight is a casino boat, on a Tuesday, which is why it costs about a thousand rupees less.</p>
+      <h3>The Latin Quarter, the churches, the river</h3>
+      <p>Central Goa is a scooter day from Baga — Panjim is 15 km, Old Goa 25. Longest ride of the week and the best one for rain, since almost all of it works wet. Tonight is a casino boat at the weekday rate.</p>
       <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.4941033,73.8300775%7C15.5054662,73.8653606%7C15.5008238,73.9114061%7C15.4947,73.8296%7C15.5068254,73.9134445%7C15.4998,73.8286" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
     </div>
   </div>
-  <div class="stops">
-    <div class="stop">
-      <div class="t">7:30 am</div>
+  <div class="stops" data-stops="d2">
+    <div class="stop" data-stop="0" draggable="true">
+      <div class="t">7:30 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">4 scooters delivered to the villa<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">book ahead</span></div>
-        <div class="s-note">Most Baga vendors will drop bikes at your door — ask when you book. Budget ₹400–700 per bike per day. Activa or Jupiter over an NTorq if anyone is a nervous rider.
-        <span class="why">Video all four bikes, all four sides, before money changes hands: scratches, dents, mirrors, tyre tread, fuel gauge, horn, indicators. Count <b>eight helmets, not four</b> — Goa enforces pillion helmets. Photograph each RC and insurance. Never leave an original licence or passport as a deposit; offer a photocopy plus cash.</span>
+        <div class="s-name">Breakfast at the villa</div>
+        <div class="s-note">Eggs, poee, coffee, out the door by 8:15 am. Sunrise is 6:25 am — this start is what buys you empty lanes.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">9:00 – 10:45 am</div>
+    <div class="stop" data-stop="1" draggable="true">
+      <div class="t">9:00 – 10:45 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4941033,73.8300775" target="_blank" rel="noopener">Fontainhas, Panjim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">best light of the week</span></div>
-        <div class="s-note">Asia's largest Latin Quarter: ochre, indigo and oxblood Portuguese houses on non-motorable cobbled lanes. Park once at the Tobacco Square end and walk. Don't miss the <b>Chapel of St. Sebastian</b> — the crucifix inside has Christ's eyes open, because it came from the Palace of the Inquisition — then Gallery Gitanjali and <b>Confeitaria 31 de Janeiro</b> for a Swiss roll and a second coffee.
-        <span class="why">These lanes are narrow enough to act like canyons and they fall into hard shadow by noon. Between 8:30 am and 10:00 am you get soft light bouncing off the pastel walls, no tour groups, and residents who don't mind you yet. This is the most time-sensitive stop of the week — being late costs you the photographs, not the place.</span>
+        <div class="s-note">Asia's largest Latin Quarter — ochre, indigo and oxblood houses on non-motorable cobbled lanes. Park once at the Tobacco Square end and walk. The <b>Chapel of St. Sebastian</b> (the crucifix has Christ's eyes open — it came from the Palace of the Inquisition), Gallery Gitanjali, then <b>Confeitaria 31 de Janeiro</b> for a Swiss roll and a second coffee.
+        <span class="why">These lanes act like canyons and fall into hard shadow by noon. Between 8:30 am and 10:00 am you get soft light off the pastel walls, no tour groups, and residents who don't mind you yet. Most time-sensitive stop of the week — late costs you the photographs, not the place.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">11:05 am</div>
+    <div class="stop" data-stop="2" draggable="true">
+      <div class="t">11:05 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5054662,73.8653606" target="_blank" rel="noopener">Fabs Bebinca, Ribandar<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
         <div class="s-note">Fatima bakes the state's best bebinca — sixteen layers of coconut milk, egg yolk and nutmeg — out of her own heritage home. Not signposted; ask near the Ribandar church. Buy a whole one for the villa.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">12:00 pm</div>
+    <div class="stop" data-stop="3" draggable="true">
+      <div class="t">12:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5008238,73.9114061" target="_blank" rel="noopener">Basilica of Bom Jesus + Sé Cathedral<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
         <div class="s-note">UNESCO-listed, both free, five minutes apart. St Francis Xavier's remains are in the Basilica; Sé is the largest church in Asia and holds the Golden Bell. Shoulders and knees covered.
-        <span class="why">The Basilica closes to visitors during Mass — check the day's times on arrival and do Sé first if you've walked into one. Both interiors are dim: brace against a pillar rather than pushing ISO, and shoot the Basilica's laterite facade from the lawn on the south side, not head-on.</span>
+        <span class="why">The Basilica closes to visitors during Mass — check times on arrival and do Sé first if you've walked into one. Both interiors are dim: brace against a pillar rather than pushing ISO, and shoot the Basilica facade from the south lawn, not head-on.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">1:30 pm</div>
+    <div class="stop" data-stop="4" draggable="true">
+      <div class="t">1:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4947,73.8296" target="_blank" rel="noopener">Lunch — Viva Panjim or Ritz Classic<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Viva Panjim is a tiny Fontainhas house doing proper Goan home food; Ritz Classic is the fish-thali institution. Either way: prawn balchão, chicken cafreal, kingfish rechado, sol kadhi.
+        <div class="s-note">Viva Panjim is a tiny Fontainhas house doing Goan home food; Ritz Classic is the fish-thali institution. Prawn balchão, chicken cafreal, kingfish rechado, sol kadhi.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">2:45 – 5:15 pm</div>
+    <div class="stop" data-stop="5" draggable="true">
+      <div class="t">2:45 – 5:15 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5068254,73.9134445" target="_blank" rel="noopener">Divar Island, by free ferry<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">free crossing</span></div>
-        <div class="s-note">The flat-bottom ferry leaves the Old Goa terminal by the Viceroy's Arch, runs roughly 6:00 am to midnight, and is free for two-wheelers. On the far side: no traffic, no tourists, empty lanes through paddy and palm, and the hilltop church at Piedade looking back over the river.
-        <span class="why">This is the best pure riding of the trip and the reason the scooters are worth having. Ask at the jetty what time the last crossing back runs and don't be on the island without knowing that number — monsoon ferries get suspended in rough water.</span>
+        <div class="s-note">The flat-bottom ferry leaves the Old Goa terminal by the Viceroy's Arch, runs roughly 6:00 am to midnight, and is free for two-wheelers. The far side has no traffic and no tourists — empty lanes through paddy and palm, and the hilltop church at Piedade looking back over the river.
+        <span class="why">Best pure riding of the trip and the reason the scooters are worth having. Ask at the jetty what time the last crossing back runs and don't be on the island without knowing that number.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">7:30 pm</div>
+    <div class="stop" data-stop="6" draggable="true">
+      <div class="t">7:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4998,73.8286" target="_blank" rel="noopener">Deltin Royale casino boat, Panjim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">new</span> <span class="chip c-call">book</span></div>
-        <div class="s-note">India's largest floating casino, boarding at Fisheries Jetty. Tuesday sits in the Monday–Thursday band, so entry starts around ₹2,500–3,000 a head and <b>includes an unlimited buffet plus bonus gaming chips</b> — the ticket is most of your dinner. Live entertainment from 7:00 pm.
-        <span class="why">This is the big night that needs no alcohol at all: it's the buffet, the tables, the show and the boat. Weekends run ₹4,000+, so a weekday is deliberate. Smart casuals, carry photo ID. <b>Take two cabs and leave the bikes at the villa</b> — Panjim to Baga at half past midnight is 16 km and not a ride to end this day on.</span>
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4998,73.8286" target="_blank" rel="noopener">Deltin Royale casino boat, Panjim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">book</span></div>
+        <div class="s-note">India's largest floating casino, boarding at Fisheries Jetty. Monday sits in the Mon–Thu band, so entry is ~₹2,500–3,000 and <b>includes an unlimited buffet plus bonus gaming chips</b>. Live entertainment from 7:00 pm.
+        <span class="why">The big night that needs no alcohol at all — the buffet, the tables, the show, the boat. Weekends run ₹4,000+. Smart casuals, carry photo ID. <b>Take two cabs and leave the bikes at the villa</b> — Panjim to Baga at half past midnight is 16 km and not a ride to end this day on.</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="day-map" id="map-d3" role="img" aria-label="Map of Tue 29 Sep"></div>
-  <div class="rstats" id="stats-d3">Loading route…</div>
-  <div class="cost"><span aria-hidden="true">₹</span><span>Scooters start today, not Sunday: <b>4 bikes × ~₹500 × 4½ days ≈ ₹9,000</b>, about ₹1,125 each for the week.</span></div>
+  <div class="reordered" hidden>Stops reordered — the times are the original slots, so check the durations still fit.</div>
+  <div class="day-map" id="map-d2" role="img" aria-label="Map of Mon 28 Sep"></div>
+  <div class="rstats" id="stats-d2">Loading route…</div>
+  <div class="cost"><span aria-hidden="true">₹</span><span>Casino entry ₹2,500–3,000 a head <b>including the buffet</b>, so it's dinner and the night in one ticket.</span></div>
   <div class="night"><i aria-hidden="true">◗</i><span>Big night, zero riding after dark. <b>Home by ~12:30 am</b> by cab.</span></div>
 </article>
 
-<article class="day" id="d4" data-day="d4" draggable="true">
+<article class="day" id="d3" data-day="d3" draggable="true">
   <div class="day-top">
-    <div class="dn"><b>4</b><small>Aguada</small></div>
+    <div class="dn"><b>3</b><small>Vagator</small></div>
     <div class="day-head">
       <div class="day-row">
-        <div class="day-date">Wed 30 Sep</div>
+        <div class="day-date">Tue 29 Sep <span class="mode m-sc">🛵 scooters</span></div>
         <div class="day-tools">
           <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
           <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
@@ -685,196 +654,86 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
         </div>
       </div>
       <div class="lockwarn" hidden></div>
-      <h3>Fort, water sports, karting — then your own pool</h3>
-      <p>Short riding day; the whole thing fits inside 12 km. Then the best-value night of the week: a fish market run, your own kitchen, your own pool, and nobody watching the clock.</p>
-      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.4922519,73.7737462%7C15.4986,73.7669%7C15.5179749,73.7626122%7C15.5757,73.7684%7C15.543,73.764%7C15.5712425,73.7564242%7C15.5146909,73.7833663" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
+      <h3>Anjuna, Chapora, the red cliffs, and the sunset table</h3>
+      <p>The postcard day. Everything sits inside a ten-kilometre arc north of the villa, so it's the shortest riding and the most photographed — ending on the Thalassa cliff with the sun going down.</p>
+      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5765268,73.7557446%7C15.5752,73.7402%7C15.5807243,73.7476299%7C15.6046375,73.7369631%7C15.593719,73.7344677%7C15.5947914,73.7354879%7C15.5649925,73.7508447" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
     </div>
   </div>
-  <div class="stops">
-    <div class="stop">
-      <div class="t">8:00 am</div>
-      <div class="s-body">
-        <div class="s-name">Breakfast at the villa</div>
-        <div class="s-note">Slow one. On the road by 9:00 am — the Calangute–Candolim strip is the worst traffic in North Goa once the morning gets going.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">9:30 – 11:15 am</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4922519,73.7737462" target="_blank" rel="noopener">Fort Aguada, Sinquerim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Free. Ramparts, the enormous freshwater cistern, and the four-storey lighthouse — the best-preserved Portuguese fort in Goa and the one that never fell.
-        <span class="why">Best light on the laterite is around 10:00 am: high enough that the haze has burnt off, angled enough that the red stone still has texture. Shooting with the sun at 90° makes the sky go deep against it. Note the fort compound shuts well before sunset, so this is a morning stop, not the sunset stop your list assumed.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">11:30 am – 1:00 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.4986,73.7669" target="_blank" rel="noopener">Sinquerim — water sports and the dolphin boat<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-risk">season-dependent</span></div>
-        <div class="s-note">Sinquerim jetty is the calmest launch on this coast and where operators restart first. Dolphin trip ₹500–900 a head for an hour; parasailing ₹1,200–2,000; jet ski ~₹1,500; banana and bumper rides ₹500–800.
-        <span class="why">Open-sea operators only run when the sea is declared safe, which in recent years has been from around mid-September. Ask at the jetty the day before rather than turning up hopeful. If it's running, this is the morning — by Thursday you've moved north and Sinquerim is 12 km away.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">1:15 – 3:00 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5179749,73.7626122" target="_blank" rel="noopener">Candolim — long lunch and the quiet sand<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">More upmarket and far less frantic than Baga, and the right place to burn the hottest part of the day. Feet up, nobody rushing.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">3:30 – 4:30 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5757,73.7684" target="_blank" rel="noopener">Track II Go-Karting, Arpora<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">new</span></div>
-        <div class="s-note">₹350 for 10 laps on a 340 m track; the pro karts run 13 hp Hondas. Twenty-five minutes, eight people, one timing board and a grudge. Cheapest fun on this page, and it's next door to where you sleep tomorrow.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">4:45 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.543,73.764" target="_blank" rel="noopener">Fish market run — Calangute or Siolim<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">for tonight</span></div>
-        <div class="s-note">Kingfish or pomfret steaks, tiger prawns, crab if it looks good — ask them to clean and cut it. Pick up kokum, coconut milk, curry leaves, ginger-garlic and a packet of rechado masala on the way back.
-        <span class="why">Buying fish at a market and cooking it yourself costs about a fifth of a shack dinner for eight. Go at 4:45 pm, not 6:00 pm — the good stuff is gone by evening.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">5:45 pm</div>
-      <div class="s-body">
-        <div class="s-name">Sunset from the villa roof — 6:24 pm</div>
-        <div class="s-note">Light until about 6:46 pm. Nothing to ride to today. Be back, and unhurried.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">7:30 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">Villa pool party and a Goan cook-up<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">the best night, and the cheapest</span></div>
-        <div class="s-note">Rechado-stuffed kingfish in the pan, prawn balchão, rice, sol kadhi, and the bebinca you bought on Tuesday. One speaker, the pool lit, and eight people who don't need a bar tab.
-        <span class="why">Five nights out in a row flattens a group by Thursday — this is the night that stops it, and the only one where you set the volume, the music and the finish time. Split it before anyone opens a packet: two cook, two prep, two on ice and drinks, two on cleanup.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">10:30 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5146909,73.7833663" target="_blank" rel="noopener">LPK Waterfront, Nerul<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-opt">optional</span> <span class="chip c-call">confirm</span></div>
-        <div class="s-note">If the party still has legs: mud-and-stone architecture carved into the riverbank, a giant sculpted Buddha, deep house on a waterfront deck. The most striking-looking venue in Goa when it's running.
-        <span class="why">A Wednesday in the last week of September is shoulder season — call and check their Instagram that week. SinQ in Candolim is the like-for-like swap if LPK is dark. And if you'd rather stay in the pool, stay in the pool; tomorrow is the big one.</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="day-map" id="map-d4" role="img" aria-label="Map of Wed 30 Sep"></div>
-  <div class="rstats" id="stats-d4">Loading route…</div>
-  <div class="cost"><span aria-hidden="true">₹</span><span>Tonight costs about <b>₹400 each</b> instead of ₹1,500 in a club, and it's the night you'll actually still be describing next year.</span></div>
-  <div class="night"><i aria-hidden="true">◗</i><span>Home is where you already are. <b>Bed by ~1:00 am</b>, later if the pool wins.</span></div>
-</article>
-
-<article class="day" id="d5" data-day="d5" draggable="true">
-  <div class="day-top">
-    <div class="dn"><b>5</b><small>Vagator</small></div>
-    <div class="day-head">
-      <div class="day-row">
-        <div class="day-date">Thu 1 Oct</div>
-        <div class="day-tools">
-          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
-          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
-          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
-        </div>
-      </div>
-      <div class="lockwarn" hidden></div>
-      <h3>Move 1.5 km, then the cliff and the big night</h3>
-      <p>Season opens today and the beaches switch on. Everything after the move sits inside a five-kilometre circle — Chapora, Ozran, Thalassa, Hammerzz — so this is the biggest day of the trip and the shortest ride home of it.</p>
-      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5719887,73.7630007%7C15.5765268,73.7557446%7C15.6046375,73.7369631%7C15.593719,73.7344677%7C15.5947914,73.7354879%7C15.5649925,73.7508447" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
-    </div>
-  </div>
-  <div class="stops">
-    <div class="stop">
-      <div class="t">8:30 am</div>
-      <div class="s-body">
-        <div class="s-name">Last villa breakfast — clear the kitchen out</div>
-        <div class="s-note">Cook whatever's left. Anything unopened goes in a bag to the hostel, which has a common kitchen too.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">10:00 am</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">Check out of Plot 77 — bags by taxi, riders by scooter<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Plot 77 to The Hosteller Arpora is about <b>1.5 km, five minutes</b>. Book one taxi or small tempo for the luggage and let the bikes run empty. Sweep every room and settle the villa deposit before anyone leaves.
-        <span class="why">Eight people with eight bags on four scooters is unbalanced, illegal to load, and the most avoidable crash risk of the week. One ₹300 fare removes it entirely.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">10:45 am</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5719887,73.7630007" target="_blank" rel="noopener">Drop bags — The Hosteller Goa, Arpora<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">check-in time</span></div>
-        <div class="s-note">Hostel check-in is usually early afternoon but luggage storage is normally available from the morning — confirm both when you book. There's a pool and a common kitchen here as well.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">11:45 am – 1:45 pm</div>
+  <div class="stops" data-stops="d3">
+    <div class="stop" data-stop="0" draggable="true">
+      <div class="t">9:30 – 11:15 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5765268,73.7557446" target="_blank" rel="noopener">Baba Au Rhum, Anjuna<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">closed one day</span></div>
-        <div class="s-note">French-Italian café in bamboo groves overlooking open fields, under a kilometre from the new base. Shakshuka, the Nutella croissants, beef roast on ciabatta, Vietnamese iced coffee, guava smoothie. Check which weekday they close before you ride over.
+        <div class="s-note">French-Italian café in bamboo groves over open fields. Shakshuka, the Nutella croissants, beef roast on ciabatta, Vietnamese iced coffee. Check which weekday they close before you ride over.
+        <span class="why">Artjuna is the alternative and the better garden — a Portuguese courtyard with a boutique and a library attached, Middle Eastern menu, 20–25 minutes for a table of eight. Pick one; you cannot do both and still make Chapora.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">2:15 – 3:30 pm</div>
+    <div class="stop" data-stop="1" draggable="true">
+      <div class="t">11:30 am – 1:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5752,73.7402" target="_blank" rel="noopener">Anjuna Beach and Café Antonio<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">photo spot</span></div>
+        <div class="s-note">The rocky-cove end of Anjuna with the old Portuguese chapel above it. Café Antonio on the cliff is the photo spot on your friends' list — go for the terrace, not the menu.
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="2" draggable="true">
+      <div class="t">1:15 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5807243,73.7476299" target="_blank" rel="noopener">Lunch — Anjuna or Assagao lanes<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Artjuna, Gunpowder or Burger Factory. Ride the Assagao lanes between them — the prettiest five kilometres in North Goa and worth twenty minutes of going nowhere.
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="3" draggable="true">
+      <div class="t">2:45 – 4:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6046375,73.7369631" target="_blank" rel="noopener">Chapora Fort<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Free, unstaffed laterite ruin on a headland above the Chapora river mouth, looking across to Morjim. The <i>Dil Chahta Hai</i> wall is the one everyone comes for.
+        <div class="s-note">Free, unstaffed laterite ruin on the headland above the Chapora river mouth, looking across to Morjim. The <i>Dil Chahta Hai</i> wall is the one everyone comes for.
         <span class="why">The path up is bare laterite and genuinely slippery after rain — proper shoes, not flip-flops. Take the back path rather than the steep direct one if it's been wet.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">3:45 – 4:45 pm</div>
+    <div class="stop" data-stop="4" draggable="true">
+      <div class="t">4:15 – 5:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.593719,73.7344677" target="_blank" rel="noopener">Ozran / Little Vagator and the red cliffs<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">The rock-carved Shiva face, red laterite cliffs, and the stepped path down to the cove. Big Vagator is the wide one you see from the fort; Ozran is the good one.
+        <div class="s-note">The rock-carved Shiva face, the red laterite cliffs, and the stepped path down to the cove. Big Vagator is the wide one you see from the fort; Ozran is the good one.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">5:00 – 8:00 pm</div>
+    <div class="stop" data-stop="5" draggable="true">
+      <div class="t">5:00 – 8:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5947914,73.7354879" target="_blank" rel="noopener">Thalassa, Vagator<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">reserve by message</span></div>
-        <div class="s-note">Clifftop Greek taverna, whitewashed, west-facing, and the sunset table of North Goa. Sunset 6:23 pm, light until 6:45 pm, so the photo window is <b>5:50 – 6:25 pm</b>. Greek dancing, plate-smashing and the fire show come later.
-        <span class="why">Arrive at 5:00 pm for a perimeter table, not at 6:00 pm for whatever's left. Call +91 98500 33537, confirm which site you're booked at — they have operated more than one — and get it back in writing on WhatsApp. For the silhouette shot, lock exposure on the sky and let the group go black; metering on faces blows the horizon out completely.</span>
+        <div class="s-note">Clifftop Greek taverna, whitewashed, west-facing, the sunset table of North Goa. Sunset 6:25 pm, light to 6:47 pm, so the photo window is <b>5:50 – 6:27 pm</b>. Greek dancing, plate-smashing and the fire show come later.
+        <span class="why">Arrive at 5:00 pm for a perimeter table, not 6:00 pm for whatever's left. Call +91 98500 33537, confirm which site you're booked at — they have run more than one — and get it in writing on WhatsApp. For the silhouette, lock exposure on the sky and let the group go black; metering on faces blows the horizon out.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">9:30 pm</div>
+    <div class="stop" data-stop="6" draggable="true">
+      <div class="t">9:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5649925,73.7508447" target="_blank" rel="noopener">Hammerzz, Baga Rd<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-fix">the big one</span> <span class="chip c-call">confirm</span></div>
-        <div class="s-note">The proper big-room night: international-grade rig, serious lighting, and a separate hookah lounge upstairs that's easy to skip. 1.5 km from the hostel.
-        <span class="why">This is the headline night, promoted from Friday because of the dry day. Thursday 1 October is season-opening night <em>and</em> the last night before a statewide dry day — exactly when Goan venues put an event on. Still call and check Instagram that week. Dress up; there's a door policy.</span>
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5649925,73.7508447" target="_blank" rel="noopener">Hammerzz or LPK Waterfront<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">confirm</span></div>
+        <div class="s-note">Hammerzz on Baga Road is the big room — international-grade rig, serious lighting, 4 km from the villa. LPK at Nerul is the better-looking venue: mud-and-stone walls carved into the riverbank, a giant Buddha, deep house on a waterfront deck.
+        <span class="why">This is now the headline club night, because the last two evenings are South Goa days and 2 October is a dry day. Call both and check Instagram the same week — shoulder-season venues announce there, not on a website. SinQ in Candolim is the third option.</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="day-map" id="map-d5" role="img" aria-label="Map of Thu 1 Oct"></div>
-  <div class="rstats" id="stats-d5">Loading route…</div>
-  <div class="cost"><span aria-hidden="true">₹</span><span>One ₹300 taxi for the bags removes the single most avoidable crash risk of the week.</span></div>
-  <div class="night"><i aria-hidden="true">◗</i><span>Biggest day, shortest ride home — under 2 km, all of it lit. <b>Home by ~2:00 am</b>.</span></div>
+  <div class="reordered" hidden>Stops reordered — the times are the original slots, so check the durations still fit.</div>
+  <div class="day-map" id="map-d3" role="img" aria-label="Map of Tue 29 Sep"></div>
+  <div class="rstats" id="stats-d3">Loading route…</div>
+  <div class="cost"><span aria-hidden="true">₹</span><span>Cafés and a clifftop dinner. Thalassa is the one booking that will not wait.</span></div>
+  <div class="night"><i aria-hidden="true">◗</i><span>Club night. <b>Home by ~1:30 am</b>.</span></div>
 </article>
 
-<article class="day" id="d6" data-day="d6" draggable="true">
+<article class="day" id="d4" data-day="d4" draggable="true">
   <div class="day-top">
-    <div class="dn"><b>6</b><small>Far north</small></div>
+    <div class="dn"><b>4</b><small>Far north</small></div>
     <div class="day-head">
       <div class="day-row">
-        <div class="day-date">Fri 2 Oct</div>
+        <div class="day-date">Wed 30 Sep <span class="mode m-sc">🛵 scooters</span></div>
         <div class="day-tools">
           <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
           <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
@@ -882,86 +741,265 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
         </div>
       </div>
       <div class="lockwarn" hidden></div>
-      <h3>First light at Parra, the Friday bazaar, then north until the road runs out</h3>
-      <p>Gandhi Jayanti — a statewide dry day, so no club, which frees the entire day for daylight. Your longest ride and your best beaches, starting before sunrise.</p>
-      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5719887,73.7630007&destination=15.5719887,73.7630007&travelmode=driving&waypoints=15.582,73.802%7C15.588477,73.8121308%7C15.5807243,73.7476299%7C15.6173203,73.7335798%7C15.6437966,73.7174025%7C15.6608,73.7066%7C15.5973414,73.7726981" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
+      <h3>First light at Parra, the far north, then your own pool</h3>
+      <p>Start before sunrise, ride to the top of the coast, come back down through the fish market, and spend the last villa night cooking in it. Longest ride of the week and the cheapest night of it.</p>
+      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.582,73.802%7C15.5973414,73.7726981%7C15.6173203,73.7335798%7C15.6437966,73.7174025%7C15.6867,73.704%7C15.6608,73.7066%7C15.6234,73.7628" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
     </div>
   </div>
-  <div class="stops">
-    <div class="stop">
-      <div class="t">6:45 – 7:45 am</div>
+  <div class="stops" data-stops="d4">
+    <div class="stop" data-stop="0" draggable="true">
+      <div class="t">6:45 – 7:45 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.582,73.802" target="_blank" rel="noopener">Parra Road, the coconut avenue<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">your friends asked for this</span></div>
-        <div class="s-note">The palm-lined stretch running from Mapusa toward Parra village, six minutes from the hostel. Sunrise is 6:25 am.
-        <span class="why">This only works before 8:00 am. At 7:00 am you get low light straight down the tunnel of palms, mist off the fields, and an empty road you can stand in the middle of. By 9:00 am it's a working road with buses and it photographs like any other road. The shot: one bike riding slowly away down the centre line, a second rider shooting low from behind.</span>
+        <div class="s-note">The palm-lined stretch from Mapusa toward Parra village, 8 km from the villa. Sunrise 6:25 am.
+        <span class="why">This only works before 8:00 am. At 7:00 am you get low light straight down the tunnel of palms, mist off the fields, and an empty road you can stand in the middle of. By 9:00 am it's a working road with buses and photographs like any other road. The shot: one bike riding slowly away down the centre line, a second rider low and behind.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">8:15 – 9:45 am</div>
+    <div class="stop" data-stop="1" draggable="true">
+      <div class="t">8:15 – 9:30 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.588477,73.8121308" target="_blank" rel="noopener">Mapusa Friday Market<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-fix">moved to the right day</span></div>
-        <div class="s-note">Runs year-round, but Friday is the bazaar and this is your only Friday. Stalls from 6:00 am; go between 8:00 am and 11:00 am before the produce sells out. Spices, cashews, Goan chorizo, bebinca, pickles, pottery, textiles. Mostly cash.
-        <span class="why">This is where you buy the cashews and spices to take home — roughly a third of beach-stall prices and better quality. Buy from the women sitting on the floor rather than the shopfronts, haggle gently, and don't buy anything in the first ten minutes.</span>
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5973414,73.7726981" target="_blank" rel="noopener">Breakfast, Assagao<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Vinayak for a Goan breakfast or Gunpowder's garden. You're 15 minutes from Parra and pointed north.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">10:15 am – 12:00 pm</div>
-      <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5807243,73.7476299" target="_blank" rel="noopener">Artjuna or Café Antonio, and the Assagao lanes<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Artjuna is a Portuguese-garden lifestyle space with a boutique and a library attached; the menu is Middle Eastern — falafel, hummus, cold-pressed juices. Expect 20–25 minutes for a table of eight. Café Antonio in Anjuna is the other option and is the photo spot on your list. Ride the Assagao lanes between the two — the prettiest five kilometres in North Goa.
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">12:45 – 2:15 pm</div>
+    <div class="stop" data-stop="2" draggable="true">
+      <div class="t">10:15 am – 12:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6173203,73.7335798" target="_blank" rel="noopener">Morjim Beach<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Wide estuary sand where the Chapora river meets the sea, and quiet even now.
-        <span class="why">Getting here means the Siolim bridge crossing — add 20–25 minutes over what the map distance suggests. Olive ridley nesting runs November to March, so this is a beach-and-birds stop, not a turtle stop. Nobody should be walking the dunes looking for nests.</span>
+        <div class="s-note">Wide estuary sand where the Chapora river meets the sea, quiet even now.
+        <span class="why">Getting here means the Siolim bridge — add 20–25 minutes over what the map distance suggests. Olive ridley nesting runs November to March, so this is a beach-and-birds stop, not a turtle stop.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">2:30 – 3:45 pm</div>
+    <div class="stop" data-stop="3" draggable="true">
+      <div class="t">12:15 – 2:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6437966,73.7174025" target="_blank" rel="noopener">Ashwem Beach<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Quieter white sand, casuarina shade, the boho end of the coast. Late lunch here if Morjim ran short — from yesterday the shacks are legally open, so more will be running than you saw on Monday.
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6437966,73.7174025" target="_blank" rel="noopener">Ashwem Beach and lunch<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Quieter white sand, casuarina shade, the boho end of the coast. Lunch at one of the beach kitchens.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">4:00 – 6:45 pm</div>
+    <div class="stop" data-stop="4" draggable="true">
+      <div class="t">2:30 – 4:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6608,73.7066" target="_blank" rel="noopener">Mandrem — sandbar, creek and the sunset<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">new</span></div>
-        <div class="s-note">Northernmost point of the trip: a sandbar, a tidal creek, and a bamboo footbridge over it. Sunset 6:22 pm, light until about 6:44 pm.
-        <span class="why">Mandrem beats the open beaches at sunset because the creek gives you reflections and a foreground. Arambol is fifteen minutes further north if the group still has legs — but that's an extra 30 minutes on the ride home in the dark at the end of your longest riding day. Decide at 4:00 pm, not at 6:00 pm.</span>
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6867,73.704" target="_blank" rel="noopener">Arambol, if the group still has legs<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-opt">optional</span></div>
+        <div class="s-note">The furthest north you can reasonably get — the sweetwater lake behind the beach and the banyan walk. 32 km from the villa, and the only stop today you can drop without regret.
+        <span class="why">Decide at 2:30 pm, not at 5:00 pm. Arambol adds about 30 minutes each way onto the end of your longest riding day, and you want to be back at the coast for sunset, not still riding toward it.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">7:00 pm</div>
+    <div class="stop" data-stop="5" draggable="true">
+      <div class="t">4:30 – 6:50 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name">Ride back south — 25 km, ~50 min</div>
-        <div class="s-note">Leave while there's still colour in the sky. Longest ride home of the week and the Siolim road is unlit — tight convoy, double the following distance, last bike sets the pace.
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6608,73.7066" target="_blank" rel="noopener">Mandrem — sandbar, creek, sunset 6:24 pm<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">best sunset</span></div>
+        <div class="s-note">A sandbar, a tidal creek, and a bamboo footbridge over it. Light until about 6:46 pm.
+        <span class="why">Mandrem beats every open beach at sunset because the creek gives you reflections and a foreground. Shoot from the footbridge looking west with the group on the sandbar.</span>
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">8:30 pm</div>
+    <div class="stop" data-stop="6" draggable="true">
+      <div class="t">7:15 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
-        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5973414,73.7726981" target="_blank" rel="noopener">Last dinner — Vinayak, Assagao<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-fix">replaces the club night</span></div>
-        <div class="s-note">Goan thali and sol kadhi, open until 11:00 pm. Gunpowder in Assagao is the other option. Both serve food normally on a dry day — only alcohol stops.
-        <span class="why">Every restaurant in Goa is open on 2 October, so don't spend the evening riding around hunting for a club that isn't going to open. If a venue does announce a dry-day event, take it — it's the one night of the year the whole floor is as sober as you are.</span>
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.6234,73.7628" target="_blank" rel="noopener">Fish market, Siolim — on the way home<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">for tonight</span></div>
+        <div class="s-note">Kingfish or pomfret steaks, tiger prawns, crab if it looks good — ask them to clean and cut it. Grab kokum, coconut milk, curry leaves and a packet of rechado masala.
+        <span class="why">Siolim sits exactly on the road back from Mandrem, which is why the fish run is today and not on a day you have to make a special trip for it.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="7" draggable="true">
+      <div class="t">8:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">Villa pool party and a Goan cook-up<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">the best night, and the cheapest</span></div>
+        <div class="s-note">Rechado-stuffed kingfish in the pan, prawn balchão, rice, sol kadhi, and the bebinca from Monday. One speaker, the pool lit, eight people who don't need a bar tab.
+        <span class="why">Last night with a kitchen and a pool — from tomorrow you're in a hostel and then in a van for two days. Split the jobs before anyone opens a packet: two cook, two prep, two on ice, two on cleanup.</span>
         </div>
       </div>
     </div>
   </div>
+  <div class="reordered" hidden>Stops reordered — the times are the original slots, so check the durations still fit.</div>
+  <div class="day-map" id="map-d4" role="img" aria-label="Map of Wed 30 Sep"></div>
+  <div class="rstats" id="stats-d4">Loading route…</div>
+  <div class="cost"><span aria-hidden="true">₹</span><span>Tonight runs about <b>₹400 each</b> against ₹1,500 in a club — and it's the one you'll still be describing next year.</span></div>
+  <div class="night"><i aria-hidden="true">◗</i><span>Last night at the villa. <b>Bed when you feel like it</b>.</span></div>
+</article>
+
+<article class="day" id="d5" data-day="d5" draggable="true">
+  <div class="day-top">
+    <div class="dn"><b>5</b><small>Deep south</small></div>
+    <div class="day-head">
+      <div class="day-row">
+        <div class="day-date">Thu 1 Oct <span class="mode m-van">🚐 tempo traveller</span></div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
+      <h3>South Goa, day one — the far end</h3>
+      <p>Scooters go back, the van arrives, and it moves your luggage to Arpora on the way out of town. Then Canacona: the cliff fort, Agonda, and Palolem. The longest drive of the trip, done sitting down.</p>
+      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5719887,73.7630007%7C15.0896,73.9214%7C15.0447,73.9866%7C15.01,74.0233" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
+    </div>
+  </div>
+  <div class="stops" data-stops="d5">
+    <div class="stop" data-stop="0" draggable="true">
+      <div class="t">7:00 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">Breakfast, pack, return the scooters<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Vendor collects from the villa. Refuel to the level you took them at, photograph the gauge, <b>play back the day-one videos</b> before anyone discusses the deposit, and get the cash back on the spot.
+        <span class="why">Do this before the van arrives, not while it's waiting. Every scooter-deposit argument in Goa starts with someone in a hurry.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="1" draggable="true">
+      <div class="t">8:00 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5712425,73.7564242" target="_blank" rel="noopener">Van picks up the group and the luggage<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">book ahead</span></div>
+        <div class="s-note">One 12-seater Tempo Traveller with a driver for both South days. Agree the stop list and the price in writing the night before.
+        <span class="why">Booking the same van and driver for Thursday and Friday is worth a discount and means one phone number instead of two. An open-ended 'South Goa sightseeing' booking is how you end up at a shop that pays the driver a commission.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="2" draggable="true">
+      <div class="t">8:20 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5719887,73.7630007" target="_blank" rel="noopener">Drop bags — The Hosteller Goa, Arpora<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">check-in time</span></div>
+        <div class="s-note">1.5 km from the villa and directly on the way out. Hostel check-in is usually early afternoon but luggage storage is normally available from the morning — confirm both when you book.
+        <span class="why">This is the whole reason the van day and the moving day are the same day. Eight people with eight bags on four scooters was the single most avoidable crash risk of the week, and now it doesn't exist.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="3" draggable="true">
+      <div class="t">11:00 am – 12:15 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.0896,73.9214" target="_blank" rel="noopener">Cabo de Rama Fort<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Open 9:00 am–5:00 pm, free. Laterite ramparts, old cannons, the Chapel of St Anthony, and cliff viewpoints dropping straight into the Arabian Sea.
+        <span class="why">The best photograph in South Goa is the cliff edge past the chapel. In late September the grass is waist-high and violently green — but the drop is unfenced and wet laterite is slick. Stay back from the edge and nobody walks to the point alone.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="4" draggable="true">
+      <div class="t">12:45 – 2:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.0447,73.9866" target="_blank" rel="noopener">Lunch and a walk — Agonda Beach<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">Two and a half kilometres of near-empty sand. Calmer than Palolem, a better lunch this early in the season, and the one stop today where nobody needs to be doing anything.
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="5" draggable="true">
+      <div class="t">2:30 – 6:50 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.01,74.0233" target="_blank" rel="noopener">Palolem Beach — sunset 6:23 pm<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-risk">pre-season</span></div>
+        <div class="s-note">The crescent everyone photographs. Walk it end to end, take the rocks at the south end toward Colomb, and wait for the light. Usable until about 6:45 pm.
+        <span class="why">Set expectations: hut licences start 1 October, so the beach is literally being rebuilt today — scaffolding, few kitchens open, red flags, no swimming, and no boats to Butterfly or Honeymoon beach. What you get instead is the most famous bay in Goa with almost nobody on it. You cannot take that photograph in December.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="6" draggable="true">
+      <div class="t">6:50 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name">North, and eat on the road</div>
+        <div class="s-note">Two and a half hours back. Stop at Margao rather than arriving in Arpora at 10:00 pm hunting for a kitchen.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="reordered" hidden>Stops reordered — the times are the original slots, so check the durations still fit.</div>
+  <div class="day-map" id="map-d5" role="img" aria-label="Map of Thu 1 Oct"></div>
+  <div class="rstats" id="stats-d5">Loading route…</div>
+  <div class="cost"><span aria-hidden="true">₹</span><span>Van day one: ~₹7,000–8,500 for 195 km with a driver — <b>₹875–1,065 each</b>, and it carries your bags to the hostel for free.</span></div>
+  <div class="night"><i aria-hidden="true">◗</i><span>No club — you'll have been on the road since 8:00 am. <b>Home by ~9:30 pm</b>.</span></div>
+</article>
+
+<article class="day" id="d6" data-day="d6" draggable="true">
+  <div class="day-top">
+    <div class="dn"><b>6</b><small>Mid south</small></div>
+    <div class="day-head">
+      <div class="day-row">
+        <div class="day-date">Fri 2 Oct <span class="mode m-van">🚐 tempo traveller</span></div>
+        <div class="day-tools">
+          <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
+          <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
+          <span class="grip" title="Drag to rearrange" aria-hidden="true">⁙</span>
+        </div>
+      </div>
+      <div class="lockwarn" hidden></div>
+      <h3>South Goa, day two — the bazaar and the mansions</h3>
+      <p>A completely different south: Friday's bazaar first, then Salcete's Portuguese heartland and the emptiest white sand in the state. Half the driving of yesterday and none of the same road.</p>
+      <a class="route-btn" href="https://www.google.com/maps/dir/?api=1&origin=15.5719887,73.7630007&destination=15.5719887,73.7630007&travelmode=driving&waypoints=15.588477,73.8121308%7C15.25578,73.99865%7C15.3103,73.9575%7C15.3369,73.9714%7C15.2793,73.912%7C15.2953,73.9068%7C15.5973414,73.7726981" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Open this day's route in Google Maps</a>
+    </div>
+  </div>
+  <div class="stops" data-stops="d6">
+    <div class="stop" data-stop="0" draggable="true">
+      <div class="t">7:45 – 9:00 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.588477,73.8121308" target="_blank" rel="noopener">Mapusa Friday Market<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-fix">your only Friday</span></div>
+        <div class="s-note">The van collects you and stops here first — Mapusa is ten minutes from Arpora. Runs year-round, but Friday is the bazaar. Spices, cashews, Goan chorizo, bebinca, pickles, pottery, textiles. Mostly cash.
+        <span class="why">This is where you buy the cashews and spices to take home — about a third of beach-stall prices and better quality. Buy from the women sitting on the floor rather than the shopfronts, and don't buy anything in the first ten minutes. The van holds your shopping all day, which is the other reason it's today.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="1" draggable="true">
+      <div class="t">10:30 am – 12:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.25578,73.99865" target="_blank" rel="noopener">Braganza House, Chandor<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-call">phone first</span></div>
+        <div class="s-note">A 350-year-old Portuguese mansion still lived in by the family — ballroom, Belgian chandeliers, a long rosewood gallery, and a relic of St Francis Xavier in the private chapel. Two wings entered separately: ~₹150 a head one side, a donation box the other. Open most days, roughly 9:00/10:00 am to 5:00 pm.
+        <span class="why">It's a home, not a museum, and eight unannounced visitors is a lot — ring ahead. Carry cash, there's no card machine. Photography rules differ between the wings, so ask. Mid-morning is when light rakes down the long gallery, which is exactly when you're there.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="2" draggable="true">
+      <div class="t">12:20 – 1:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.3103,73.9575" target="_blank" rel="noopener">Rachol Seminary<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">new</span></div>
+        <div class="s-note">A 16th-century seminary and a museum of Christian art that almost nobody visits — painted ceilings, a working pipe organ, and a fortified gate. Fifteen minutes from Chandor.
+        <span class="why">Call ahead or accept you may only see the church and the courtyard; the museum keeps its own hours and it is still a functioning seminary. Even the outside is worth the stop.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="3" draggable="true">
+      <div class="t">1:15 – 2:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.3369,73.9714" target="_blank" rel="noopener">Loutolim — Figueiredo Mansion and Mario Miranda's village<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">new</span></div>
+        <div class="s-note">A 400-year-old Portuguese-era house with its own library and chapel, in the village the cartoonist Mario Miranda came from. Ancestral Goa next door is a walk-through of old village life. Lunch here or in Margao at Longuinhos.
+        <span class="why">Two heritage houses in one day is the right number — three is a slog. If the group is flagging, skip Figueiredo and just walk the village; the lanes and the church square are the point.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="4" draggable="true">
+      <div class="t">3:15 – 5:00 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.2793,73.912" target="_blank" rel="noopener">Colva Beach<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
+        <div class="s-note">The oldest and best-known beach in South Goa, and the busiest thing you'll see all day — which after yesterday is a change of pace rather than a problem.
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="5" draggable="true">
+      <div class="t">5:00 – 6:50 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.2953,73.9068" target="_blank" rel="noopener">Betalbatim and Majorda — sunset 6:22 pm<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-new">the quiet one</span></div>
+        <div class="s-note">Ten minutes north of Colva and almost deserted: golden sand, casuarina groves, and Sunset Point at Betalbatim. Light until about 6:44 pm.
+        <span class="why">This is the best-kept stretch in Goa and the reason the second South day earns its place. Walk north from Betalbatim into Majorda as the light goes — nobody on it, and the palms come right down to the sand.</span>
+        </div>
+      </div>
+    </div>
+    <div class="stop" data-stop="6" draggable="true">
+      <div class="t">8:30 pm<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
+      <div class="s-body">
+        <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5973414,73.7726981" target="_blank" rel="noopener">Last dinner, Assagao or Anjuna<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a> <span class="chip c-fix">dry day</span></div>
+        <div class="s-note">Vinayak for a thali and sol kadhi, or Gunpowder. Every restaurant in Goa serves food normally on 2 October; only alcohol stops.
+        <span class="why">Don't spend the evening hunting for a club that isn't going to open. If a venue does announce a dry-day event, take it — it's the one night of the year the whole floor is as sober as you are.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="reordered" hidden>Stops reordered — the times are the original slots, so check the durations still fit.</div>
   <div class="day-map" id="map-d6" role="img" aria-label="Map of Fri 2 Oct"></div>
   <div class="rstats" id="stats-d6">Loading route…</div>
-  <div class="cost"><span aria-hidden="true">₹</span><span>A market morning and a beach day. Today costs fuel and a thali.</span></div>
-  <div class="night"><i aria-hidden="true">◗</i><span>Last night, and an early one on purpose — 11:00 am checkout and four scooters to hand back. <b>Home by ~10:30 pm</b>.</span></div>
+  <div class="cost"><span aria-hidden="true">₹</span><span>Van day two: ~₹5,500–7,000 for 135 km — <b>₹690–875 each</b>. Ask for a two-day rate when you book Thursday.</span></div>
+  <div class="night"><i aria-hidden="true">◗</i><span>2 October is a statewide dry day — every casino is shut by order and clubs don't open a room they can't run a bar in. <b>Home by ~9:00 pm</b>.</span></div>
 </article>
 
 <article class="day" id="d7" data-day="d7" draggable="true">
@@ -969,7 +1007,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
     <div class="dn"><b>7</b><small>Out</small></div>
     <div class="day-head">
       <div class="day-row">
-        <div class="day-date">Sat 3 Oct</div>
+        <div class="day-date">Sat 3 Oct <span class="mode m-none">no vehicle</span></div>
         <div class="day-tools">
           <button type="button" class="dbtn" data-move="-1" title="Move a day earlier" aria-label="Move earlier">▲</button>
           <button type="button" class="dbtn" data-move="1" title="Move a day later" aria-label="Move later">▼</button>
@@ -977,47 +1015,40 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
         </div>
       </div>
       <div class="lockwarn" hidden></div>
-      <h3>Hand back the keys</h3>
-      <p>Checkout is 11:00 am and then you all scatter. The only thing that can go wrong today is the scooter deposits, so do those first and unhurried.</p>
+      <h3>Checkout</h3>
+      <p>11:00 am, and then you all scatter. Scooters went back on Thursday and the van finished last night, so the only thing left is bags and a shared tab.</p>
     </div>
   </div>
-  <div class="stops">
-    <div class="stop">
-      <div class="t">7:30 am</div>
+  <div class="stops" data-stops="d7">
+    <div class="stop" data-stop="0" draggable="true">
+      <div class="t">7:30 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=15.5719887,73.7630007" target="_blank" rel="noopener">Breakfast and pack<span class="pin-i" aria-hidden="true">◎</span><span class="sr">— open in Google Maps</span></a></div>
-        <div class="s-note">Hostel kitchen, or walk to the nearest café. Charge everything and back the photos up to the cloud while you still have decent wifi.
+        <div class="s-note">Hostel kitchen, or walk to the nearest café. Charge everything and back the photos up while you still have decent wifi.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">8:30 am</div>
-      <div class="s-body">
-        <div class="s-name">Return all four scooters</div>
-        <div class="s-note">Refuel to the level you took them at and photograph the gauge. <b>Play back the day-three videos in front of the vendor</b> before anyone discusses the deposit, and get the cash back on the spot.
-        <span class="why">Doing this at 8:30 am instead of 10:30 am is the difference between a calm conversation and an argument you lose because you have a checkout in twenty minutes. Every scooter-deposit horror story in Goa starts with someone in a hurry.</span>
-        </div>
-      </div>
-    </div>
-    <div class="stop">
-      <div class="t">9:30 am</div>
+    <div class="stop" data-stop="1" draggable="true">
+      <div class="t">9:00 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name">Last coffee, and settle the tab</div>
-        <div class="s-note">Sit for an hour and square the shared money now, while all eight of you are in one room — not over the group chat next week.
+        <div class="s-note">Sit for an hour. Square the shared money now — eight people, one splitting app, done before anyone leaves.
         </div>
       </div>
     </div>
-    <div class="stop">
-      <div class="t">11:00 am</div>
+    <div class="stop" data-stop="2" draggable="true">
+      <div class="t">11:00 am<span class="sgrip" title="Drag to reorder this stop">&#8281;</span><button type="button" class="sbtn" data-smove="-1" aria-label="Move stop earlier">&#9650;</button><button type="button" class="sbtn" data-smove="1" aria-label="Move stop later">&#9660;</button></div>
       <div class="s-body">
         <div class="s-name">Checkout, and everyone goes their own way</div>
-        <div class="s-note">Anyone on the 1:40 pm out of Mopa (GOX) leaves straight from checkout — 35–40 km, 60–75 minutes, which puts you at the terminal around 12:15 pm. That works, but only if the bikes went back at 8:30 am and the taxi was booked the night before.
+        <div class="s-note">Book airport taxis the night before. Anyone on the 1:40 pm out of Mopa (GOX) leaves straight from checkout — 35–40 km, 60–75 minutes, at the terminal around 12:15 pm.
+        <span class="why">There is no group vehicle today, so nobody should be improvising a ride at 11:00 am. Whoever needs a taxi books it on Friday night and shares the driver's number in the group chat.</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="cost"><span aria-hidden="true">₹</span><span>Get four deposits back in cash. That's today's entire job.</span></div>
-  <div class="night"><i aria-hidden="true">◗</i><span>Seven days, three regions, and every hard closure worked around. <b>Nothing on the list got skipped.</b></span></div>
+  <div class="reordered" hidden>Stops reordered — the times are the original slots, so check the durations still fit.</div>
+  <div class="cost"><span aria-hidden="true">₹</span><span>Square the money while all eight of you are in one room, not over the group chat next week.</span></div>
+  <div class="night"><i aria-hidden="true">◗</i><span>Six days, three regions, and every hard closure worked around. <b>Nothing on the list got skipped.</b></span></div>
 </article></div>
 
   <hr class="rule">
@@ -1049,6 +1080,86 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
       <a class="route-btn" id="mRoute" href="#" target="_blank" rel="noopener"><span aria-hidden="true">▸</span> Navigate this day</a>
     </div>
     <ul class="mlist" id="mList"></ul>
+  </div>
+  <hr class="rule">
+</section>
+
+<!-- ================= BOOK AHEAD ================= -->
+<section id="book">
+  <div class="sec-head">
+    <div class="kicker">Phone calls</div>
+    <h2>What needs booking, and who to ring</h2>
+    <p>Eleven things, eight people. Where a number is public it's here and tappable; where it isn't — because small
+       Goan operators change numbers constantly and a stale one is worse than none — the link runs the search that
+       finds the current one. <b>Claim one each in the group chat.</b></p>
+  </div>
+  <div class="bkgrid">
+      <div class="bk">
+        <div class="bk-h"><h4>4 scooters + 8 helmets</h4><span class="urg u-now">now</span></div>
+        <div class="bk-w">Delivered to Plot 77, Sun 27, 12:00 pm</div>
+        <p>Four days, delivered to the villa. Ask for the delivery — it saves a hot walk on arrival day. ₹400–700 per bike per day.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=scooter+rental+Baga+Goa+delivery+contact+number+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>12-seater Tempo Traveller + driver</h4><span class="urg u-now">now</span></div>
+        <div class="bk-w">Thu 1 &amp; Fri 2 Oct, both days</div>
+        <p>Book <b>both days with the same operator</b> and ask for a two-day rate — it's ~330 km of driving across the two. Thursday it also moves your luggage to Arpora.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=tempo+traveller+12+seater+rental+North+Goa+with+driver+contact+number+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Thalassa, Vagator</h4><span class="urg u-now">now</span></div>
+        <div class="bk-w">Tue 29 Sep, 5:00 pm, table of 8</div>
+        <p>The only booking that genuinely sells out. Confirm which branch and get it back in writing on WhatsApp.</p>
+        <div class="bk-f"><a class="num" href="tel:+919850033537">+91 98500 33537</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Braganza House, Chandor</h4><span class="urg u-this">this week</span></div>
+        <div class="bk-w">Fri 2 Oct, ~10:30 am</div>
+        <p>A lived-in family home, not a museum. Eight unannounced visitors is a lot — phone first and carry cash.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Braganza+House+Chandor+Goa+contact+number+visit+timings+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Deltin Royale casino</h4><span class="urg u-this">this week</span></div>
+        <div class="bk-w">Mon 28 Sep, 7:30 pm</div>
+        <p>Weekday package ₹2,500–3,000 including buffet and chips. Book online for the rate; carry photo ID.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Deltin+Royale+Goa+casino+booking+weekday+package+contact+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Hammerzz / LPK / SinQ</h4><span class="urg u-one">one week out</span></div>
+        <div class="bk-w">Tue 29 Sep, 9:30 pm</div>
+        <p>Shoulder season — call <em>and</em> check Instagram the same week. Ask about table minimums for eight.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Hammerzz+Goa+nightclub+contact+number+Baga+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Tito's / Mambo's</h4><span class="urg u-one">one week out</span></div>
+        <div class="bk-w">Sun 27 Sep, 9:30 pm</div>
+        <p>Check they're running on a shoulder-season Sunday and whether a table minimum applies.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Titos+Lane+Baga+Goa+club+entry+table+booking+contact+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Rachol Seminary</h4><span class="urg u-one">one week out</span></div>
+        <div class="bk-w">Fri 2 Oct, ~12:20 pm</div>
+        <p>A working seminary with its own hours. Call, or accept you may only see the church and courtyard.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Rachol+Seminary+Goa+museum+visiting+hours+contact+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Jumpin Heights bungee, Mayem</h4><span class="urg u-if">if you want it</span></div>
+        <div class="bk-w">Optional — swap into Wed 30</div>
+        <p>₹4,110 + GST, 9:30 am–4:00 pm, ages 12–45, 40–110 kg. Book the slot online.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Jumpin+Heights+Goa+Mayem+Lake+bungee+booking+contact+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Water sports / dolphin boat, Sinquerim</h4><span class="urg u-on">on the day</span></div>
+        <div class="bk-w">Ask the day before</div>
+        <p>Open-sea operators only run when the sea is declared safe. No point pre-booking; ask at the jetty.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Sinquerim+jetty+Goa+water+sports+dolphin+trip+operator+contact+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
+      <div class="bk">
+        <div class="bk-h"><h4>Airport taxis</h4><span class="urg u-Fri">Fri night</span></div>
+        <div class="bk-w">Sat 3 Oct, from 11:00 am</div>
+        <p>No group vehicle on checkout day. Whoever needs one books Friday night and shares the driver's number.</p>
+        <div class="bk-f"><a class="find" href="https://www.google.com/search?q=Arpora+to+Mopa+airport+GOX+taxi+booking+contact+Goa" target="_blank" rel="noopener">Find the number &#8599;</a></div>
+      </div>
   </div>
   <hr class="rule">
 </section>
@@ -1441,7 +1552,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
 <script>
 (function(){
   "use strict";
-  var DATA = {"d1":{"label":"Sun 27 Sep · On foot","title":"Arrive, and don't hire anything","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5581911,73.7506843%7C15.5566,73.7513%7C15.5606,73.7494%7C15.5439,73.7553%7C15.5588,73.7538%7C15.5563293,73.7530218","stops":[{"n":"Check in — Plot 77 by HNH, Baga","t":"11:00 am","ll":[15.5712425,73.7564242]},{"n":"Walk down to Baga Beach","t":"12:30 pm","ll":[15.5581911,73.7506843]},{"n":"Lunch — Souza Lobo or Britto's","t":"1:00 pm","ll":[15.5566,73.7513]},{"n":"Baga river mouth and the north rocks","t":"3:00 pm","ll":[15.5606,73.7494]},{"n":"Calangute, or a shack and nothing at all","t":"4:30 pm","ll":[15.5439,73.7553]},{"n":"Small shop for tomorrow's early breakfast","t":"7:30 pm","ll":[15.5588,73.7538]},{"n":"Tito's Lane — Tito's and Mambo's","t":"9:30 pm","ll":[15.5563293,73.7530218]}],"pts":[[15.5712425,73.7564242],[15.5581911,73.7506843],[15.5566,73.7513],[15.5606,73.7494],[15.5439,73.7553],[15.5588,73.7538],[15.5563293,73.7530218],[15.5712425,73.7564242]]},"d2":{"label":"Mon 28 Sep · South","title":"South Goa, in one hired van","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.25578,73.99865%7C15.0896,73.9214%7C15.0447,73.9866%7C15.01,74.0233%7C15.5192,73.7643","stops":[{"n":"The van leaves Baga","t":"7:00 am","ll":[15.5712425,73.7564242]},{"n":"Braganza House, Chandor","t":"9:15 – 10:45 am","ll":[15.25578,73.99865]},{"n":"Cabo de Rama Fort","t":"12:15 – 1:30 pm","ll":[15.0896,73.9214]},{"n":"Lunch and a walk — Agonda Beach","t":"2:00 – 3:15 pm","ll":[15.0447,73.9866]},{"n":"Palolem Beach","t":"3:45 – 6:45 pm","ll":[15.01,74.0233]},{"n":"Grocery stop — Newton's, Candolim","t":"9:15 pm","ll":[15.5192,73.7643]}],"pts":[[15.5712425,73.7564242],[15.25578,73.99865],[15.0896,73.9214],[15.0447,73.9866],[15.01,74.0233],[15.5192,73.7643],[15.5712425,73.7564242]]},"d3":{"label":"Tue 29 Sep · Central","title":"Scooters arrive, then the Latin Quarter and the river","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.4941033,73.8300775%7C15.5054662,73.8653606%7C15.5008238,73.9114061%7C15.4947,73.8296%7C15.5068254,73.9134445%7C15.4998,73.8286","stops":[{"n":"4 scooters delivered to the villa","t":"7:30 am","ll":[15.5712425,73.7564242]},{"n":"Fontainhas, Panjim","t":"9:00 – 10:45 am","ll":[15.4941033,73.8300775]},{"n":"Fabs Bebinca, Ribandar","t":"11:05 am","ll":[15.5054662,73.8653606]},{"n":"Basilica of Bom Jesus + Sé Cathedral","t":"12:00 pm","ll":[15.5008238,73.9114061]},{"n":"Lunch — Viva Panjim or Ritz Classic","t":"1:30 pm","ll":[15.4947,73.8296]},{"n":"Divar Island, by free ferry","t":"2:45 – 5:15 pm","ll":[15.5068254,73.9134445]},{"n":"Deltin Royale casino boat, Panjim","t":"7:30 pm","ll":[15.4998,73.8286]}],"pts":[[15.5712425,73.7564242],[15.4941033,73.8300775],[15.5054662,73.8653606],[15.5008238,73.9114061],[15.4947,73.8296],[15.5068254,73.9134445],[15.4998,73.8286],[15.5712425,73.7564242]]},"d4":{"label":"Wed 30 Sep · Aguada","title":"Fort, water sports, karting — then your own pool","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.4922519,73.7737462%7C15.4986,73.7669%7C15.5179749,73.7626122%7C15.5757,73.7684%7C15.543,73.764%7C15.5712425,73.7564242%7C15.5146909,73.7833663","stops":[{"n":"Fort Aguada, Sinquerim","t":"9:30 – 11:15 am","ll":[15.4922519,73.7737462]},{"n":"Sinquerim — water sports and the dolphin boat","t":"11:30 am – 1:00 pm","ll":[15.4986,73.7669]},{"n":"Candolim — long lunch and the quiet sand","t":"1:15 – 3:00 pm","ll":[15.5179749,73.7626122]},{"n":"Track II Go-Karting, Arpora","t":"3:30 – 4:30 pm","ll":[15.5757,73.7684]},{"n":"Fish market run — Calangute or Siolim","t":"4:45 pm","ll":[15.543,73.764]},{"n":"Villa pool party and a Goan cook-up","t":"7:30 pm","ll":[15.5712425,73.7564242]},{"n":"LPK Waterfront, Nerul","t":"10:30 pm","ll":[15.5146909,73.7833663]}],"pts":[[15.5712425,73.7564242],[15.4922519,73.7737462],[15.4986,73.7669],[15.5179749,73.7626122],[15.5757,73.7684],[15.543,73.764],[15.5712425,73.7564242],[15.5146909,73.7833663],[15.5712425,73.7564242]]},"d5":{"label":"Thu 1 Oct · Vagator","title":"Move 1.5 km, then the cliff and the big night","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5719887,73.7630007%7C15.5765268,73.7557446%7C15.6046375,73.7369631%7C15.593719,73.7344677%7C15.5947914,73.7354879%7C15.5649925,73.7508447","stops":[{"n":"Check out of Plot 77 — bags by taxi, riders by scooter","t":"10:00 am","ll":[15.5712425,73.7564242]},{"n":"Drop bags — The Hosteller Goa, Arpora","t":"10:45 am","ll":[15.5719887,73.7630007]},{"n":"Baba Au Rhum, Anjuna","t":"11:45 am – 1:45 pm","ll":[15.5765268,73.7557446]},{"n":"Chapora Fort","t":"2:15 – 3:30 pm","ll":[15.6046375,73.7369631]},{"n":"Ozran / Little Vagator and the red cliffs","t":"3:45 – 4:45 pm","ll":[15.593719,73.7344677]},{"n":"Thalassa, Vagator","t":"5:00 – 8:00 pm","ll":[15.5947914,73.7354879]},{"n":"Hammerzz, Baga Rd","t":"9:30 pm","ll":[15.5649925,73.7508447]}],"pts":[[15.5712425,73.7564242],[15.5719887,73.7630007],[15.5765268,73.7557446],[15.6046375,73.7369631],[15.593719,73.7344677],[15.5947914,73.7354879],[15.5649925,73.7508447],[15.5712425,73.7564242]]},"d6":{"label":"Fri 2 Oct · Far north","title":"First light at Parra, the Friday bazaar, then north until the road runs out","route":"https://www.google.com/maps/dir/?api=1&origin=15.5719887,73.7630007&destination=15.5719887,73.7630007&travelmode=driving&waypoints=15.582,73.802%7C15.588477,73.8121308%7C15.5807243,73.7476299%7C15.6173203,73.7335798%7C15.6437966,73.7174025%7C15.6608,73.7066%7C15.5973414,73.7726981","stops":[{"n":"Parra Road, the coconut avenue","t":"6:45 – 7:45 am","ll":[15.582,73.802]},{"n":"Mapusa Friday Market","t":"8:15 – 9:45 am","ll":[15.588477,73.8121308]},{"n":"Artjuna or Café Antonio, and the Assagao lanes","t":"10:15 am – 12:00 pm","ll":[15.5807243,73.7476299]},{"n":"Morjim Beach","t":"12:45 – 2:15 pm","ll":[15.6173203,73.7335798]},{"n":"Ashwem Beach","t":"2:30 – 3:45 pm","ll":[15.6437966,73.7174025]},{"n":"Mandrem — sandbar, creek and the sunset","t":"4:00 – 6:45 pm","ll":[15.6608,73.7066]},{"n":"Last dinner — Vinayak, Assagao","t":"8:30 pm","ll":[15.5973414,73.7726981]}],"pts":[[15.5719887,73.7630007],[15.582,73.802],[15.588477,73.8121308],[15.5807243,73.7476299],[15.6173203,73.7335798],[15.6437966,73.7174025],[15.6608,73.7066],[15.5973414,73.7726981],[15.5719887,73.7630007]]},"d7":{"label":"Sat 3 Oct · Out","title":"Hand back the keys","route":"","stops":[{"n":"Breakfast and pack","t":"7:30 am","ll":[15.5719887,73.7630007]}],"pts":[[15.5719887,73.7630007]]}};
+  var DATA = {"d1":{"label":"Sun 27 Sep · Baga","title":"Keys, wheels, and the fort at sunset","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5566,73.7513%7C15.5581911,73.7506843%7C15.4922519,73.7737462%7C15.4986,73.7669%7C15.5192,73.7643%7C15.5563293,73.7530218","stops":[{"n":"Check in — Plot 77 by HNH, Baga","t":"11:00 am","ll":[15.5712425,73.7564242]},{"n":"4 scooters delivered to the villa","t":"12:00 pm","ll":[15.5712425,73.7564242]},{"n":"Lunch — Souza Lobo or Britto's","t":"1:00 pm","ll":[15.5566,73.7513]},{"n":"Baga Beach and the river mouth","t":"2:30 pm","ll":[15.5581911,73.7506843]},{"n":"Fort Aguada, Sinquerim","t":"4:15 – 5:30 pm","ll":[15.4922519,73.7737462]},{"n":"Sunset, Sinquerim Beach — 6:27 pm","t":"5:30 – 6:50 pm","ll":[15.4986,73.7669]},{"n":"Stock the kitchen — Newton's, Candolim","t":"7:30 pm","ll":[15.5192,73.7643]},{"n":"Tito's Lane — Tito's and Mambo's","t":"9:30 pm","ll":[15.5563293,73.7530218]}],"pts":[[15.5712425,73.7564242],[15.5566,73.7513],[15.5581911,73.7506843],[15.4922519,73.7737462],[15.4986,73.7669],[15.5192,73.7643],[15.5563293,73.7530218],[15.5712425,73.7564242]]},"d2":{"label":"Mon 28 Sep · Central","title":"The Latin Quarter, the churches, the river","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.4941033,73.8300775%7C15.5054662,73.8653606%7C15.5008238,73.9114061%7C15.4947,73.8296%7C15.5068254,73.9134445%7C15.4998,73.8286","stops":[{"n":"Fontainhas, Panjim","t":"9:00 – 10:45 am","ll":[15.4941033,73.8300775]},{"n":"Fabs Bebinca, Ribandar","t":"11:05 am","ll":[15.5054662,73.8653606]},{"n":"Basilica of Bom Jesus + Sé Cathedral","t":"12:00 pm","ll":[15.5008238,73.9114061]},{"n":"Lunch — Viva Panjim or Ritz Classic","t":"1:30 pm","ll":[15.4947,73.8296]},{"n":"Divar Island, by free ferry","t":"2:45 – 5:15 pm","ll":[15.5068254,73.9134445]},{"n":"Deltin Royale casino boat, Panjim","t":"7:30 pm","ll":[15.4998,73.8286]}],"pts":[[15.5712425,73.7564242],[15.4941033,73.8300775],[15.5054662,73.8653606],[15.5008238,73.9114061],[15.4947,73.8296],[15.5068254,73.9134445],[15.4998,73.8286],[15.5712425,73.7564242]]},"d3":{"label":"Tue 29 Sep · Vagator","title":"Anjuna, Chapora, the red cliffs, and the sunset table","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5765268,73.7557446%7C15.5752,73.7402%7C15.5807243,73.7476299%7C15.6046375,73.7369631%7C15.593719,73.7344677%7C15.5947914,73.7354879%7C15.5649925,73.7508447","stops":[{"n":"Baba Au Rhum, Anjuna","t":"9:30 – 11:15 am","ll":[15.5765268,73.7557446]},{"n":"Anjuna Beach and Café Antonio","t":"11:30 am – 1:00 pm","ll":[15.5752,73.7402]},{"n":"Lunch — Anjuna or Assagao lanes","t":"1:15 pm","ll":[15.5807243,73.7476299]},{"n":"Chapora Fort","t":"2:45 – 4:00 pm","ll":[15.6046375,73.7369631]},{"n":"Ozran / Little Vagator and the red cliffs","t":"4:15 – 5:00 pm","ll":[15.593719,73.7344677]},{"n":"Thalassa, Vagator","t":"5:00 – 8:00 pm","ll":[15.5947914,73.7354879]},{"n":"Hammerzz or LPK Waterfront","t":"9:30 pm","ll":[15.5649925,73.7508447]}],"pts":[[15.5712425,73.7564242],[15.5765268,73.7557446],[15.5752,73.7402],[15.5807243,73.7476299],[15.6046375,73.7369631],[15.593719,73.7344677],[15.5947914,73.7354879],[15.5649925,73.7508447],[15.5712425,73.7564242]]},"d4":{"label":"Wed 30 Sep · Far north","title":"First light at Parra, the far north, then your own pool","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.582,73.802%7C15.5973414,73.7726981%7C15.6173203,73.7335798%7C15.6437966,73.7174025%7C15.6867,73.704%7C15.6608,73.7066%7C15.6234,73.7628","stops":[{"n":"Parra Road, the coconut avenue","t":"6:45 – 7:45 am","ll":[15.582,73.802]},{"n":"Breakfast, Assagao","t":"8:15 – 9:30 am","ll":[15.5973414,73.7726981]},{"n":"Morjim Beach","t":"10:15 am – 12:00 pm","ll":[15.6173203,73.7335798]},{"n":"Ashwem Beach and lunch","t":"12:15 – 2:00 pm","ll":[15.6437966,73.7174025]},{"n":"Arambol, if the group still has legs","t":"2:30 – 4:00 pm","ll":[15.6867,73.704]},{"n":"Mandrem — sandbar, creek, sunset 6:24 pm","t":"4:30 – 6:50 pm","ll":[15.6608,73.7066]},{"n":"Fish market, Siolim — on the way home","t":"7:15 pm","ll":[15.6234,73.7628]},{"n":"Villa pool party and a Goan cook-up","t":"8:30 pm","ll":[15.5712425,73.7564242]}],"pts":[[15.5712425,73.7564242],[15.582,73.802],[15.5973414,73.7726981],[15.6173203,73.7335798],[15.6437966,73.7174025],[15.6867,73.704],[15.6608,73.7066],[15.6234,73.7628],[15.5712425,73.7564242]]},"d5":{"label":"Thu 1 Oct · Deep south","title":"South Goa, day one — the far end","route":"https://www.google.com/maps/dir/?api=1&origin=15.5712425,73.7564242&destination=15.5712425,73.7564242&travelmode=driving&waypoints=15.5719887,73.7630007%7C15.0896,73.9214%7C15.0447,73.9866%7C15.01,74.0233","stops":[{"n":"Breakfast, pack, return the scooters","t":"7:00 am","ll":[15.5712425,73.7564242]},{"n":"Van picks up the group and the luggage","t":"8:00 am","ll":[15.5712425,73.7564242]},{"n":"Drop bags — The Hosteller Goa, Arpora","t":"8:20 am","ll":[15.5719887,73.7630007]},{"n":"Cabo de Rama Fort","t":"11:00 am – 12:15 pm","ll":[15.0896,73.9214]},{"n":"Lunch and a walk — Agonda Beach","t":"12:45 – 2:00 pm","ll":[15.0447,73.9866]},{"n":"Palolem Beach — sunset 6:23 pm","t":"2:30 – 6:50 pm","ll":[15.01,74.0233]}],"pts":[[15.5712425,73.7564242],[15.5719887,73.7630007],[15.0896,73.9214],[15.0447,73.9866],[15.01,74.0233],[15.5712425,73.7564242]]},"d6":{"label":"Fri 2 Oct · Mid south","title":"South Goa, day two — the bazaar and the mansions","route":"https://www.google.com/maps/dir/?api=1&origin=15.5719887,73.7630007&destination=15.5719887,73.7630007&travelmode=driving&waypoints=15.588477,73.8121308%7C15.25578,73.99865%7C15.3103,73.9575%7C15.3369,73.9714%7C15.2793,73.912%7C15.2953,73.9068%7C15.5973414,73.7726981","stops":[{"n":"Mapusa Friday Market","t":"7:45 – 9:00 am","ll":[15.588477,73.8121308]},{"n":"Braganza House, Chandor","t":"10:30 am – 12:00 pm","ll":[15.25578,73.99865]},{"n":"Rachol Seminary","t":"12:20 – 1:00 pm","ll":[15.3103,73.9575]},{"n":"Loutolim — Figueiredo Mansion and Mario Miranda's village","t":"1:15 – 2:30 pm","ll":[15.3369,73.9714]},{"n":"Colva Beach","t":"3:15 – 5:00 pm","ll":[15.2793,73.912]},{"n":"Betalbatim and Majorda — sunset 6:22 pm","t":"5:00 – 6:50 pm","ll":[15.2953,73.9068]},{"n":"Last dinner, Assagao or Anjuna","t":"8:30 pm","ll":[15.5973414,73.7726981]}],"pts":[[15.5719887,73.7630007],[15.588477,73.8121308],[15.25578,73.99865],[15.3103,73.9575],[15.3369,73.9714],[15.2793,73.912],[15.2953,73.9068],[15.5973414,73.7726981],[15.5719887,73.7630007]]},"d7":{"label":"Sat 3 Oct · Out","title":"Checkout","route":"","stops":[{"n":"Breakfast and pack","t":"7:30 am","ll":[15.5719887,73.7630007]}],"pts":[[15.5719887,73.7630007]]}};
 
   function get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
@@ -1574,6 +1685,109 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
     mo.observe(mapEl);
   } else { drawDay(tabs[0].getAttribute('data-day')); }
 
+  /* ---------- reorder the stops inside a day ---------- */
+  (function(){
+    var saved={};
+    try{ saved=JSON.parse(get('goa-stops')||'{}'); }catch(e){ saved={}; }
+
+    function boxes(){ return [].slice.call(document.querySelectorAll('.stops[data-stops]')); }
+
+    function relabel(box){
+      var rows=[].slice.call(box.children);
+      var times=rows.map(function(r){ return r.querySelector('.t').firstChild.nodeValue; });
+      /* the time belongs to the slot, not the activity — so slots stay in order */
+      times.sort(function(){ return 0; });
+      rows.forEach(function(r,i){
+        var up=r.querySelector('[data-smove="-1"]'), dn=r.querySelector('[data-smove="1"]');
+        up.disabled = (i===0); dn.disabled = (i===rows.length-1);
+      });
+      var key=box.getAttribute('data-stops');
+      var home=rows.map(function(r){ return +r.getAttribute('data-stop'); });
+      var custom = home.join(',')!==home.slice().sort(function(a,b){return a-b;}).join(',');
+      var note=box.parentNode.querySelector('.reordered');
+      if(note) note.hidden=!custom;
+      if(custom) saved[key]=home; else delete saved[key];
+      set('goa-stops', JSON.stringify(saved));
+    }
+
+    function retime(box){
+      /* times are positional: row 1 always shows the day's first time slot */
+      var rows=[].slice.call(box.children);
+      if(!box._times) box._times=rows.map(function(r){ return r.querySelector('.t').firstChild.nodeValue; });
+      rows.forEach(function(r,i){ r.querySelector('.t').firstChild.nodeValue=box._times[i]; });
+    }
+
+    function moveRow(row, dir){
+      var box=row.parentNode, rows=[].slice.call(box.children), i=rows.indexOf(row), j=i+dir;
+      if(j<0||j>=rows.length) return;
+      if(dir<0) box.insertBefore(row, rows[j]); else box.insertBefore(rows[j], row);
+      retime(box); relabel(box);
+      row.scrollIntoView({block:'center'});
+    }
+
+    document.addEventListener('click',function(e){
+      var b=e.target.closest('.sbtn'); if(!b) return;
+      moveRow(b.closest('.stop'), parseInt(b.getAttribute('data-smove'),10));
+    });
+
+    var drag=null;
+    document.addEventListener('dragstart',function(e){
+      var row=e.target.closest('.stop'); if(!row) return;
+      e.stopPropagation();                       /* don't start a day-card drag as well */
+      drag=row; row.classList.add('sdrag');
+      e.dataTransfer.effectAllowed='move';
+      try{ e.dataTransfer.setData('text/plain','stop'); }catch(x){}
+    },true);
+    document.addEventListener('dragend',function(){
+      if(!drag) return;
+      drag.classList.remove('sdrag');
+      [].forEach.call(document.querySelectorAll('.stop.sover'),function(r){ r.classList.remove('sover'); });
+      drag=null;
+    },true);
+    document.addEventListener('dragover',function(e){
+      if(!drag) return;
+      var row=e.target.closest('.stop');
+      if(!row || row.parentNode!==drag.parentNode) return;   /* only within the same day */
+      e.preventDefault(); e.stopPropagation();
+      [].forEach.call(document.querySelectorAll('.stop.sover'),function(r){ r.classList.remove('sover'); });
+      if(row!==drag) row.classList.add('sover');
+    },true);
+    document.addEventListener('drop',function(e){
+      if(!drag) return;
+      var row=e.target.closest('.stop');
+      if(!row || row.parentNode!==drag.parentNode || row===drag) return;
+      e.preventDefault(); e.stopPropagation();
+      var box=row.parentNode, rows=[].slice.call(box.children);
+      if(rows.indexOf(drag) < rows.indexOf(row)) box.insertBefore(drag, row.nextSibling);
+      else box.insertBefore(drag, row);
+      retime(box); relabel(box);
+    },true);
+
+    /* restore a saved order */
+    boxes().forEach(function(box){
+      var want=saved[box.getAttribute('data-stops')];
+      var rows=[].slice.call(box.children);
+      box._times=rows.map(function(r){ return r.querySelector('.t').firstChild.nodeValue; });
+      if(want && want.length===rows.length){
+        var by={}; rows.forEach(function(r){ by[r.getAttribute('data-stop')]=r; });
+        var okAll=want.every(function(n){ return by[n]; });
+        if(okAll) want.forEach(function(n){ box.appendChild(by[n]); });
+        retime(box);
+      }
+      relabel(box);
+    });
+
+    document.getElementById('resetBtn').addEventListener('click',function(){
+      saved={}; set('goa-stops','{}');
+      boxes().forEach(function(box){
+        [].slice.call(box.children)
+          .sort(function(a,b){ return a.getAttribute('data-stop')-b.getAttribute('data-stop'); })
+          .forEach(function(r){ box.appendChild(r); });
+        retime(box); relabel(box);
+      });
+    });
+  })();
+
   /* ---------- a map inside each day ---------- */
   var dayMaps={};
   function initDayMap(key){
@@ -1681,7 +1895,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
 
   /* ---------- day reordering ---------- */
   (function(){
-    var META = {"slots":[{"date":"Sun 27 Sep","short":"Sun 27"},{"date":"Mon 28 Sep","short":"Mon 28"},{"date":"Tue 29 Sep","short":"Tue 29"},{"date":"Wed 30 Sep","short":"Wed 30"},{"date":"Thu 1 Oct","short":"Thu 1"},{"date":"Fri 2 Oct","short":"Fri 2"},{"date":"Sat 3 Oct","short":"Sat 3"}],"locks":{"d1":{"ok":[0],"why":"Check-in at Plot 77 is 11:00 am on the 27th. This day cannot happen anywhere else."},"d2":{"ok":[1,2,3],"why":"The south needs a full day and a 7:00 am start, so it has to sit before the 1 Oct move — and it can't be the arrival day."},"d3":{"ok":[1,2,3,4],"why":"Deltin entry jumps to ₹4,000+ on Fri, Sat and Sun, and every casino in Goa is shut on 2 October."},"d4":{"ok":[1,2,3],"why":"The pool and the kitchen are at Plot 77, so the villa party has to fall before you move out on 1 October."},"d5":{"ok":[4],"why":"Plot 77 checkout and Hosteller check-in are both fixed to 1 October."},"d6":{"ok":[5],"why":"Mapusa's bazaar only runs on Friday, and 2 Oct being a dry day is exactly why this evening has no club in it."},"d7":{"ok":[6],"why":"Checkout is 11:00 am on the 3rd."}},"order":["d1","d2","d3","d4","d5","d6","d7"]};
+    var META = {"slots":[{"date":"Sun 27 Sep","short":"Sun 27"},{"date":"Mon 28 Sep","short":"Mon 28"},{"date":"Tue 29 Sep","short":"Tue 29"},{"date":"Wed 30 Sep","short":"Wed 30"},{"date":"Thu 1 Oct","short":"Thu 1"},{"date":"Fri 2 Oct","short":"Fri 2"},{"date":"Sat 3 Oct","short":"Sat 3"}],"locks":{"d1":{"ok":[0],"why":"Check-in at Plot 77 is 11:00 am on the 27th, and the scooters are delivered here."},"d2":{"ok":[1,2,3],"why":"A scooter day — and Deltin entry jumps to ₹4,000+ on Fri, Sat and Sun, with every casino in Goa shut on 2 October."},"d3":{"ok":[1,2,3],"why":"A scooter day, so it has to sit inside 27–30 September while you still have the bikes."},"d4":{"ok":[1,2,3],"why":"The pool, the kitchen and the scooters are all at Plot 77 — this has to be your last villa night."},"d5":{"ok":[4],"why":"This is the day the van moves your luggage from Plot 77 to The Hosteller. Both bookings fix it to 1 October."},"d6":{"ok":[5],"why":"Mapusa's bazaar only runs on Friday, and 2 Oct being a dry day is exactly why this evening has no club in it."},"d7":{"ok":[6],"why":"Checkout is 11:00 am on the 3rd."}},"order":["d1","d2","d3","d4","d5","d6","d7"],"stopn":{"d1":8,"d2":7,"d3":7,"d4":8,"d5":7,"d6":7,"d7":3}};
     if(!META) return;
     var list=document.getElementById('dayList');
     if(!list) return;
@@ -1732,7 +1946,7 @@ footer{text-align:center; padding:24px 16px 30px; font-size:11px; letter-spacing
         }
       });
       var changed = order.join(',')!==HOME.join(',');
-      document.getElementById('resetBtn').style.display = changed ? '' : 'none';
+      document.getElementById('resetBtn').style.display = '';
       window.dispatchEvent(new CustomEvent('goa:reordered'));
       if(save){
         set('goa-order', JSON.stringify(order));
